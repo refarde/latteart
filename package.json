@@ -1,0 +1,29 @@
+{
+	"name": "latteart",
+
+	"version": "0.0.1",
+
+	"description": "",
+
+	"directories": {
+		"test": "tests"
+	},
+
+	"author": "SCore",
+
+	"dependencies": {},
+
+	"main" : "Gruntfile.js",
+
+	"devDependencies": {
+		"eslint-config-jquery": "1.0.0"
+	},
+
+	"scripts": {},
+
+	"keywords":[],
+
+	"private": true,
+
+	"license": "UNLICENSED"
+}

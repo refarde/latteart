@@ -9,7 +9,7 @@
 		"test": "tests"
 	},
 
-	"author": "SCore",
+	"author": "Wonseop Kim",
 
 	"dependencies": {},
 
@@ -25,5 +25,5 @@
 
 	"private": true,
 
-	"license": "UNLICENSED"
+	"license": "MIT License"
 }

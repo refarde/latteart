@@ -1,29 +1,32 @@
 {
-	"name": "latteart",
-
-	"version": "0.0.1",
-
-	"description": "",
-
-	"directories": {
-		"test": "tests"
-	},
-
-	"author": "Wonseop Kim",
-
-	"dependencies": {},
-
-	"main" : "Gruntfile.js",
-
-	"devDependencies": {
-		"eslint-config-jquery": "1.0.0"
-	},
-
-	"scripts": {},
-
-	"keywords":[],
-
-	"private": true,
-
-	"license": "MIT License"
+  "name": "latteart",
+  "version": "0.0.1",
+  "description": "Photo & Image Editing Tool",
+  "directories": {
+    "test": "tests"
+  },
+  "author": "Wonseop Kim",
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^0.28.9",
+    "eslint": "^4.16.0",
+    "eslint-config-jquery": "1.0.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^2.30.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0"
+  },
+  "keywords": [],
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/refarde/latteart.git"
+  },
+  "bugs": {
+    "url": "https://github.com/refarde/latteart/issues"
+  },
+  "homepage": "https://github.com/refarde/latteart#readme"
 }

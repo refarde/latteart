@@ -1,5 +1,5 @@
 /*!
- * Extracted from threejs r84
+ * Extracted from threejs
  * https://threejs.org/
  *
  * Copyright © 2010-2017 three.js authors
@@ -9,19 +9,19 @@
 module.export = function() {
 	"use strict";
 
-	function Vector2( x, y ) {
+	function LaVec2( x, y ) {
 		this.x = x || 0;
 		this.y = y || 0;
 	}
 
-	Vector2.prototype = {
+	LaVec2.prototype = {
 		set: function( x, y ) {
 			this.x = x || 0;
 			this.y = y || 0;
 		},
 
 		clone: function() {
-			return new Vector2( this.x, this.y );
+			return new LaVec2( this.x, this.y );
 		},
 
 		copy: function( vector ) {
@@ -35,8 +35,8 @@ module.export = function() {
 				maximumSet = maximum !== null && maximum !== undefined;
 
 			if ( minimumSet ) {
-				if ( !( minimum instanceof Vector2 ) ) {
-					minimum = new Vector2( minimum, minimum );
+				if ( !( minimum instanceof LaVec2 ) ) {
+					minimum = new LaVec2( minimum, minimum );
 				}
 
 				this.x = Math.max( minimum.x, this.x );
@@ -44,8 +44,8 @@ module.export = function() {
 			}
 
 			if ( maximumSet ) {
-				if ( !( maximum instanceof Vector2 ) ) {
-					maximum = new Vector2( maximum, maximum );
+				if ( !( maximum instanceof LaVec2 ) ) {
+					maximum = new LaVec2( maximum, maximum );
 				}
 
 				this.x = Math.min( maximum.x, this.x );
@@ -96,5 +96,5 @@ module.export = function() {
 		}
 	};
 
-	return Vector2;
+	return LaVec2;
 };

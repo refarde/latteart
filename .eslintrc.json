@@ -1,5 +1,25 @@
 {
 	"root": true,
 
-	"extends": "./.eslintrc-browser.json"
+	"extends": "jquery",
+
+	"parserOptions": {
+		"ecmaVersion": 3
+	},
+
+	"env": {
+		"browser": true
+	},
+
+	"globals": {
+		"window": true,
+		"jQuery": true,
+		"define": true,
+		"module": true,
+		"noGlobal": true
+	},
+
+	"rules": {
+		"strict": ["error", "function"]
+	}
 }

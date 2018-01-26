@@ -48,7 +48,7 @@ module.exports = ( function() {
 
 	return {
 		entry: [
-			"./src/latteart"
+			"./src/EditorManager"
 		],
 
 		output: {

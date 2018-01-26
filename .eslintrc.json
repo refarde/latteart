@@ -20,7 +20,7 @@
 	},
 
 	"rules": {
-		"strict": ["error", "function"],
+		"strict": "off",
 		"max-len": "off"
 	}
 }

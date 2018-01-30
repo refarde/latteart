@@ -3,3 +3,7 @@ node_modules
 *.bak
 *.*~
 .vscode
+npm-debug.log
+.DS_Store
+Thumbs.db
+.idea/

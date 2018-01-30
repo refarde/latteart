@@ -1,7 +1,6 @@
 var document = window.document,
 	$ = require( "./libs/jquery-custom.js" ),
 	env = require( "bowser" ),
-
 	Editor = require( "./Editor.js" ),
 
 	_prepared = false,
@@ -92,8 +91,8 @@ var document = window.document,
 
 			$( function() {
 				editor = new Editor( id, configs, self );
-				this.editors[ editor.id ] = editor;
-				this.activeEditor = editor;
+				self.editors[ editor.id ] = editor;
+				self.activeEditor = editor;
 				editor.create();
 
 				if ( typeof callback === "function" ) {
@@ -157,7 +156,3 @@ var document = window.document,
 	};
 
 window.latteart = EditorManager;
-
-console.log( $ );
-console.log( env );
-console.log( EditorManager );

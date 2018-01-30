@@ -33,7 +33,7 @@ Editor.prototype = {
 				self.trigger( "editorcreate" );
 			} );
 
-		ui.create( self, {
+		ui.create( {
 			targetId: self.id,
 			configs: configs,
 			menuItems: self.menuItems,
@@ -69,7 +69,7 @@ Editor.prototype = {
 	 *
 	 * !주:
 	 *  에디터 인스턴스는 editorManager에서 계속 관리되지 때문에 해당 메소드로는 삭제되지 않음.
-	 *  cafe.destroy( id )를 이용해야 더 효과적인 삭제 가능.
+	 *  latteart.destroy( id )를 이용해야 더 효과적인 삭제 가능.
 	 */
 	destroy: function() {
 		var self = this;
@@ -138,4 +138,4 @@ Editor.prototype = {
 	}
 };
 
-module.export = Editor;
+module.exports = Editor;

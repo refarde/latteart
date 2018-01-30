@@ -1,8 +1,14 @@
-// var reIdentifier = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+";
 
 function UI( editor ) {
-	this.editor = editor;
-	this.$ = editor.$;
+	var self = this,
+		$;
+
+	self.editor = editor;
+	$ = self.$ = editor.$;
+
+	if ( !$.lui ) {
+		require( "./lui/lui.js" )( $ );
+	}
 }
 
 UI.prototype = {
@@ -22,13 +28,15 @@ UI.prototype = {
 		}
 
 		uiData = self._init( {
-			configs: data.configs || {}
+			configs: data.configs || {
+				toolbar: "load save"
+			}
 		} );
 
-		this.widgets = uiData.widgets;
-		this.configs = uiData.configs;
+		self.widgets = uiData.widgets;
+		self.configs = uiData.configs;
 
-		this._render( target, uiData.htmlData );
+		self._render( target, uiData.htmlData );
 	},
 
 	_init: function( data ) {
@@ -52,7 +60,7 @@ UI.prototype = {
 
 	_createContainer: function( uiData ) {
 		var $ = this.$,
-			widget = $.ui.container(),
+			widget = $.lui.container(),
 			widgetData = widget.getHTMLData();
 
 		widgetData.attr.className.push( "la-latteart", "la-border-all" );
@@ -62,7 +70,7 @@ UI.prototype = {
 
 	_createCanvas: function( uiData ) {
 		var $ = this.$,
-			canvas = $.ui.canvas(),
+			canvas = $.lui.canvas(),
 			canvasData = canvas.getHTMLData();
 
 		canvasData.attr.className.push( "la-canvas" );
@@ -73,7 +81,7 @@ UI.prototype = {
 	_createToolbar: function( uiData ) {
 		var $ = this.$,
 			configs = uiData.configs || {},
-			toolbar = $.ui.container(),
+			toolbar = $.lui.container(),
 			toolbarData = toolbar.getHTMLData();
 
 		if ( configs.toolbar !== false ) {
@@ -90,13 +98,13 @@ UI.prototype = {
 			editor = self.editor,
 			$ = self.$,
 			$target = $( target ),
-			$container = $( $.ui.makeHTML( htmlData ) );
+			$container = $( $.lui.makeHTML( htmlData ) );
 
 		$target.one( "drewui", function( e ) {
 			var $buildedContainer = $( e.relatedTarget ),
 				result = true;
 
-			$buildedContainer.show();
+			$buildedContainer.css( "display", "block" );
 
 			try {
 				self._postRender();
@@ -107,7 +115,7 @@ UI.prototype = {
 				// outerHTML을 빈문자열로 치환해주는 것이 더 효과적임.
 				// 이는 경험적인 내용으로, 타 브라우저에는 적용이 안되거나 업데이트 등을 통해 변경될 수 있음.
 				$buildedContainer[ 0 ].outerHTML = "";
-				$target.show();
+				$target.css( "display", $target.attr( "data-la-before" ) || "block" );
 				result = false;
 			} finally {
 				editor.trigger( result ? "uicreate" : "uicreatefail" );
@@ -117,7 +125,8 @@ UI.prototype = {
 		// draw UI
 		this.$target =
 			$target
-				.hide()
+				.attr( "data-la-before", $target.css( "display" ) )
+				.css( "display", "none" )
 				.after( $container )
 				.trigger( {
 					type: "drewui",
@@ -126,40 +135,27 @@ UI.prototype = {
 	},
 
 	_postRender: function() {
-		var self = this,
-			$ = self.$,
-			widgets = this.widgets,
-			editor = this.editor,
+		var widgets = this.widgets,
 			key;
 
 		for ( key in widgets ) {
 			widgets[ key ].init();
 		}
-
-		editor.one( "editorcreate", function() {
-			var $body = $( editor.getBody() ),
-				configs = editor.configs;
-
-			$body.css( "minHeight",
-				configs.height -
-				parseFloat( $body.css( "margin-top" ) ) -
-				parseFloat( $body.css( "margin-bottom" ) )
-			);
-		} );
 	},
 
 	_final: function() {
 		var self = this,
-			$ = self.$;
+			$ = self.$,
+			$target = self.$target;
 
-		if ( self.$target ) {
-			self.$target.show();
+		if ( $target ) {
+			$target.css( "display", $target.attr( "data-la-before" ) || "block" );
 
 			// 완벽한 데이터 삭제를 위해 show hide시 jQuery에 의해 자동 저장되는
 			// target에 대한 olddisplay 데이터도 제거
-			$._removeData( self.$target[ 0 ], "olddisplay" );
+			$._removeData( $target[ 0 ], "olddisplay" );
 
-			self.$target = null;
+			self.$target = $target = null;
 		}
 	},
 
@@ -189,4 +185,4 @@ UI.prototype = {
 	}
 };
 
-module.export = UI;
+module.exports = UI;

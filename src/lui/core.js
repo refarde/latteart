@@ -1,10 +1,11 @@
-module.exports = function( $ ) {
+module.exports = function( $, env ) {
 	var uiPrefix = "lui-";
 
 	$.lui = $.lui || {};
 
 	$.extend( $.lui, {
 		prefix: uiPrefix,
+		env: env,
 
 		keyCode: {
 			BACKSPACE: 8,

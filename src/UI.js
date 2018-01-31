@@ -7,7 +7,7 @@ function UI( editor ) {
 	$ = self.$ = editor.$;
 
 	if ( !$.lui ) {
-		require( "./lui/lui.js" )( $ );
+		require( "./lui/lui.js" )( $, editor.env );
 	}
 }
 
@@ -28,9 +28,7 @@ UI.prototype = {
 		}
 
 		uiData = self._init( {
-			configs: data.configs || {
-				toolbar: "load save"
-			}
+			configs: data.configs
 		} );
 
 		self.widgets = uiData.widgets;
@@ -49,10 +47,17 @@ UI.prototype = {
 			};
 
 		data = data || {};
-		uiData.configs = $.extend( {}, data.configs );
+		uiData.configs = $.extend( {
+			navbar: {
+				left: [ "load", "save", "undo", "redo" ],
+				right: [ "zoom" ]
+			},
+			toolbar: [ "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ]
+		}, data.configs );
 
 		self._createContainer( uiData );
-		self._createCanvas( uiData );
+		self._createNavbar( uiData );
+		self._createRenderer( uiData );
 		self._createToolbar( uiData );
 
 		return uiData;
@@ -68,25 +73,85 @@ UI.prototype = {
 		uiData.widgets.container = widget;
 	},
 
-	_createCanvas: function( uiData ) {
+	_createNavbar: function( uiData ) {
 		var $ = this.$,
-			canvas = $.lui.canvas(),
-			canvasData = canvas.getHTMLData();
+			configs = uiData.configs || {},
+			navbarConfig = configs.navbar,
+			navbar = $.lui.container(),
+			navbarData = navbar.getHTMLData(),
+			createControlSet = function( pos ) {
+				var config = navbarConfig[ pos.toLowerCase() ],
+					i, length,
+					controlConfig, control, controlData,
+					controlSet, controlSetData;
 
-		canvasData.attr.className.push( "la-canvas" );
-		uiData.htmlData.contents.push( canvasData );
-		uiData.widgets.canvas = canvas;
+				if ( !config ) {
+					return;
+				}
+
+				controlSet = $.lui.container();
+				controlSetData = controlSet.getHTMLData();
+				length = config.length;
+
+				for ( i = 0; i < length; i++ ) {
+					controlConfig = config[ i ];
+					control = $.lui.button( {
+						label: controlConfig,
+						icons: {
+							primary: controlConfig
+						}
+					} );
+					controlData = control.getHTMLData();
+					controlSetData.contents.push( controlData );
+					uiData.widgets[ controlConfig ] = control;
+				}
+
+				navbarData.contents.push( controlSetData );
+				uiData.widgets[ "navbar" + pos ] = controlSet;
+			};
+
+		if ( navbarConfig !== false ) {
+			createControlSet( "Left" );
+			createControlSet( "Right" );
+		}
+
+		uiData.htmlData.contents.push( navbarData );
+		uiData.widgets.navbar = navbar;
+	},
+
+	_createRenderer: function( uiData ) {
+		var $ = this.$,
+			renderer = $.lui.renderer(),
+			rendererData = renderer.getHTMLData();
+
+		uiData.htmlData.contents.push( rendererData );
+		uiData.widgets.renderer = renderer;
 	},
 
 	_createToolbar: function( uiData ) {
 		var $ = this.$,
 			configs = uiData.configs || {},
 			toolbar = $.lui.container(),
-			toolbarData = toolbar.getHTMLData();
+			toolbarData = toolbar.getHTMLData(),
+			controlConfig, control, controlData,
+			i, length, config;
 
 		if ( configs.toolbar !== false ) {
+			config = configs.toolbar;
+			length = config.length;
 
-			// 버튼 생성
+			for ( i = 0; i < length; i++ ) {
+				controlConfig = config[ i ];
+				control = $.lui.button( {
+					label: controlConfig,
+					icons: {
+						primary: controlConfig
+					}
+				} );
+				controlData = control.getHTMLData();
+				toolbarData.contents.push( controlData );
+				uiData.widgets[ controlConfig ] = control;
+			}
 		}
 
 		uiData.htmlData.contents.push( toolbarData );

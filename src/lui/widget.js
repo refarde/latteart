@@ -539,7 +539,7 @@ module.exports = function( $ ) {
 
 					target.addClass( clsState.hover );
 
-					if ( !$.lui.getIEVersion() ) {
+					if ( !$.lui.env.ie ) {
 						return;
 					}
 

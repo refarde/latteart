@@ -1,7 +1,7 @@
-module.exports = function( $ ) {
-	require( "./core.js" )( $ );
+module.exports = function( $, env ) {
+	require( "./core.js" )( $, env );
 	require( "./widget.js" )( $ );
 	require( "./container.js" )( $ );
-	require( "./canvas.js" )( $ );
+	require( "./renderer.js" )( $ );
 	require( "./button.js" )( $ );
 };

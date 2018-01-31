@@ -8,8 +8,7 @@ var document = window.document,
 
 	EditorManager = {
 		$: $,
-		browser: env.browser,
-		os: env.os,
+		env: env,
 		editors: {},
 		version: "@@EDITOR_VERSION@@",
 		edition: "@@EDITOR_EDITION@@",

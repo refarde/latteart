@@ -7,8 +7,7 @@ function Editor( id, configs, editorManager ) {
 	self.configs = configs = $.extend( { id: id }, configs );
 	self.language = configs.language || "ko_KR";
 	self.id = id;
-	self.os = editorManager.os;
-	self.browser = editorManager.browser;
+	self.env = editorManager.env;
 	self.finalTasks = [];
 	self.ui = null;
 	self.canvasContext = null;

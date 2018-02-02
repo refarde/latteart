@@ -1,0 +1,109 @@
+@import "common";
+
+//----------------------------------
+// Button
+//----------------------------------
+
+.lui-button {
+	display: inline-block;
+	position: relative;
+	padding: 0;
+	line-height: normal;
+	margin-right: .1em;
+	cursor: pointer;
+	text-align: center;
+	overflow: visible;
+	.lui-button-text {
+		display: block;
+		line-height: normal;
+	}
+}
+
+.lui-button,.lui-button:link,
+.lui-button:visited,
+.lui-button:hover,
+.lui-button:active {
+	text-decoration: none;
+}
+
+.lui-button-icon-only {
+	width: 2.4em;
+
+	.lui-icon {
+		left: 50%;
+		margin-left: -8px;
+	}
+}
+
+.lui-button-icons-only {
+	width: 3.7em;
+}
+
+.lui-button-text-only {
+	.lui-button-text {
+		padding: .4em 1em;
+	}
+}
+
+.lui-button-icon-only .lui-button-text,
+.lui-button-icons-only .lui-button-text {
+	padding: .4em;
+	text-indent: -9999999px;
+}
+
+.lui-button-text-icon-primary .lui-button-text,
+.lui-button-text-icons .lui-button-text {
+	padding: .4em 1em .4em 2.1em;
+}
+
+.lui-button-text-icon-secondary .lui-button-text,
+.lui-button-text-icons .lui-button-text {
+	padding: .4em 2.1em .4em 1em;
+}
+
+.lui-button-text-icons {
+	.lui-button-text {
+		padding-left: 2.1em;
+		padding-right: 2.1em;
+	}
+}
+
+.lui-button-icon-only .lui-icon,
+.lui-button-text-icon-primary .lui-icon,
+.lui-button-text-icon-secondary .lui-icon,
+.lui-button-text-icons .lui-icon,
+.lui-button-icons-only .lui-icon {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+}
+
+.lui-button-text-icon-primary .lui-button-icon-primary,
+.lui-button-text-icons .lui-button-icon-primary,
+.lui-button-icons-only .lui-button-icon-primary {
+	left: .5em;
+}
+
+.lui-button-text-icon-secondary .lui-button-icon-secondary,
+.lui-button-text-icons .lui-button-icon-secondary,
+.lui-button-icons-only .lui-button-icon-secondary {
+	right: .5em;
+}
+
+.lui-buttonset {
+	margin-right: 7px;
+
+	& > * {
+		vertical-align: middle;
+	}
+
+	.lui-button {
+		margin-left: 0;
+		margin-right: -1px;
+	}
+}
+
+.lui-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}

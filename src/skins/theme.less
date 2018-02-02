@@ -1,0 +1,284 @@
+@import "common";
+
+//----------------------------------
+// Theme
+//----------------------------------
+
+//----------------------------------
+// Component containers
+//----------------------------------
+.lui-widget {
+	font-size: @fontSizeDefault;
+	font-family: @fontFamilyDefault;
+
+	& input,
+	& select,
+	& textarea,
+	& button {
+		font-family: @fontFamilyDefault;
+		font-size: @fontSizeDefault;
+	}
+}
+
+.lui-widget-content {
+	border: 1px solid @borderColorContent;
+	background: @backgroundColorContent @backgroundImageUrlContent @backgroundContentXPosition @backgroundContentYPosition @backgroundContentRepeat;
+
+	&, & * {
+		color: @fontColorContent;
+	}
+
+	a, a * {
+		color: @fontColorContent;
+	}
+}
+
+//----------------------------------
+// Interaction states
+//----------------------------------
+.lui-state-default,
+.lui-widget-content .lui-state-default {
+	border: 1px solid @borderColorDefault;
+	background: @backgroundColorDefault @backgroundImageUrlDefault @backgroundDefaultXPosition @backgroundDefaultYPosition @backgroundDefaultRepeat;
+	font-weight: @fontWeightDefault;
+
+	&, & * {
+		color: @fontColorDefault;
+	}
+}
+
+.lui-state-default a:link,
+.lui-state-default a:visited {
+	color: @fontColorDefault;
+	text-decoration: none;
+}
+
+.lui-state-hover,
+.lui-widget-content .lui-state-hover,
+.lui-state-focus,
+.lui-widget-content .lui-state-focus {
+	border: 1px solid @borderColorHover;
+	background: @backgroundColorHover @backgroundImageUrlHover @backgroundHoverXPosition @backgroundHoverYPosition @backgroundHoverRepeat;
+	font-weight: @fontWeightDefault;
+
+	&, & * {
+		color: @fontColorHover;
+	}
+}
+
+.lui-state-hover a,
+.lui-state-hover a:hover,
+.lui-state-hover a:link,
+.lui-state-hover a:visited,
+.lui-state-focus a,
+.lui-state-focus a:hover,
+.lui-state-focus a:link,
+.lui-state-focus a:visited {
+	color: @fontColorHover;
+	text-decoration: none;
+}
+
+.lui-state-active,
+.lui-widget-content .lui-state-active {
+	border: 1px solid @borderColorActive;
+	background: @backgroundColorActive @backgroundImageUrlActive @backgroundActiveXPosition @backgroundActiveYPosition @backgroundActiveRepeat;
+	font-weight: @fontWeightDefault;
+
+	&, & * {
+		color: @fontColorHover;
+	}
+}
+
+.lui-state-active a,
+.lui-state-active a:link,
+.lui-state-active a:visited {
+	color: @fontColorActive;
+	text-decoration: none;
+}
+
+//----------------------------------
+// Interaction Cues
+//----------------------------------
+.lui-state-highlight,
+.lui-widget-content .lui-state-highlight {
+	border: 1px solid @borderColorHighlight;
+	background: @backgroundColorHighlight @backgroundImageUrlHighlight @backgroundHighlightXPosition @backgroundHighlightYPosition @backgroundHighlightRepeat;
+
+	&, & * {
+		color: @fontColorHighlight;
+	}
+}
+
+.lui-state-highlight a,
+.lui-widget-content .lui-state-highlight a {
+	color: @fontColorHighlight;
+}
+
+.lui-state-error,
+.lui-widget-content .lui-state-error {
+	border: 1px solid @borderColorError;
+	background: @backgroundColorError @backgroundImageUrlError @backgroundErrorXPosition @backgroundErrorYPosition @backgroundErrorRepeat;
+
+	&, & * {
+		color: @fontColorError;
+	}
+}
+
+.lui-state-error a,
+.lui-widget-content .lui-state-error a {
+	color: @fontColorError;
+}
+
+.lui-state-error-text,
+.lui-widget-content .lui-state-error-text {
+	&, & * {
+		color: @fontColorError;
+	}
+}
+.lui-priority-primary,
+.lui-widget-content .lui-priority-primary {
+	&, & * {
+		font-weight: bold;
+	}
+}
+
+.lui-priority-secondary,
+.lui-widget-content .lui-priority-secondary {
+	opacity: .7;
+	filter:Alpha(Opacity=70);
+
+	&, & * {
+		font-weight: normal;
+	}
+}
+
+.lui-state-disabled,
+.lui-widget-content .lui-state-disabled {
+	opacity: .35;
+	filter:Alpha(Opacity=35);
+	background-image: none;
+}
+
+.lui-state-disabled .lui-icon {
+	filter:Alpha(Opacity=35);
+}
+
+//----------------------------------
+// Icons
+//----------------------------------
+
+/* states and images */
+.lui-icon {
+	width: 16px;
+	height: 16px;
+}
+
+/* positioning */
+.lui-icon-load { background-image: url(); }
+.lui-icon-save { background-image: url(); }
+
+.lui-icon-undo { background-image: url(); }
+.lui-icon-redo { background-image: url(); }
+.lui-icon-zoom { background-image: url(); }
+.lui-icon-rotation { background-image: url(); }
+.lui-icon-flip { background-image: url(); }
+.lui-icon-crop { background-image: url(); }
+.lui-icon-brightness { background-image: url(); }
+.lui-icon-contrast { background-image: url(); }
+.lui-icon-saturation { background-image: url(); }
+.lui-icon-text { background-image: url(); }
+.lui-icon-brush { background-image: url(); }
+
+//----------------------------------
+// Misc visuals
+//----------------------------------
+
+// Corner radius
+.lui-corner-all,
+.lui-corner-top,
+.lui-corner-left,
+.lui-corner-tl {
+	border-top-left-radius: @cornerRadius;
+}
+
+.lui-corner-all,
+.lui-corner-top,
+.lui-corner-right,
+.lui-corner-tr {
+	border-top-right-radius: @cornerRadius;
+}
+
+.lui-corner-all,
+.lui-corner-bottom,
+.lui-corner-left,
+.lui-corner-bl {
+	border-bottom-left-radius: @cornerRadius;
+}
+
+.lui-corner-all,
+.lui-corner-bottom,
+.lui-corner-right,
+.lui-corner-br {
+	border-bottom-right-radius: @cornerRadius;
+}
+
+// Border
+&.lui-border-top,
+& .lui-border-top {
+	border-top: 1px solid @borderColorDefault;
+}
+
+&.lui-border-bottom,
+& .lui-border-bottom {
+	border-bottom: 1px solid @borderColorDefault;
+}
+
+&.lui-border-all,
+& .lui-border-all {
+	border: 1px solid @borderColorDefault;
+}
+
+// Overlays
+.lui-widget-overlay {
+	background: @backgroundColorOverlay @backgroundImageUrlOverlay @backgroundOverlayXPosition @backgroundOverlayYPosition @backgroundOverlayRepeat;
+	opacity: @opacityOverlay;
+	filter: @opacityFilterOverlay;
+}
+.lui-widget-shadow {
+	margin: @offsetTopShadow 0 0 @offsetLeftShadow;
+	padding: @thicknessShadow;
+	background: @backgroundColorShadow @backgroundImageUrlShadow @backgroundShadowXPosition @backgroundShadowYPosition backgroundShadowRepeat;
+	opacity: @opacityShadow;
+	filter: @opacityFilterShadow;
+	border-radius: @cornerRadiusShadow;
+}
+
+//----------------------------------
+// Logical Area
+//----------------------------------
+.lui-toolbar {
+	padding: 4px;
+	background-color: #fff;
+
+	& > * {
+		vertical-align:middle;
+	}
+
+	button {
+		&.lui-state-default,
+		&.lui-state-default span {
+			border-color: transparent;
+		}
+
+		&.lui-state-hover,
+		&.lui-state-focus {
+			border-color: @borderColorHover;
+			z-index: 1;
+		}
+
+		&.lui-state-active {
+			border-color: @borderColorActive;
+			z-index: 1;
+		}
+	}
+}

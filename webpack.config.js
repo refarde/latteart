@@ -110,6 +110,9 @@ module.exports = ( function() {
 		module: {
 			loaders: [ {
 				test: /\.less$/,
+				include: [
+					path.resolve( __dirname, "src/skins" )
+				],
 				use: ExtractTextPlugin.extract( {
 					fallback: "style-loader",
 					use: [ "css-loader", "less-loader" ]

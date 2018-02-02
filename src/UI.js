@@ -68,7 +68,7 @@ UI.prototype = {
 			widget = $.lui.container(),
 			widgetData = widget.getHTMLData();
 
-		widgetData.attr.className.push( "la-latteart", "la-border-all" );
+		widgetData.attr.className.push( "lui-latteart", "lui-skin-default", "lui-border-all" );
 		uiData.htmlData = widgetData;
 		uiData.widgets.container = widget;
 	},

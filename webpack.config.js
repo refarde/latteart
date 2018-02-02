@@ -21,9 +21,7 @@ var path = require( "path" ),
 			"\n" +
 			"Copyright JS Foundation and other contributors\n" +
 			"Released under the MIT license\n" +
-			"https://jquery.org/license\n" +
-			"\n" +
-			"Date: 2018-01-30T05:29Z",
+			"https://jquery.org/license",
 		jqueryUILicense:
 			"jQuery UI - v1.11.1 - 2014-08-13\n" +
 			"http://jqueryui.com/ \n" +
@@ -32,22 +30,34 @@ var path = require( "path" ),
 		bowserLicense:
 			"Bowser - a browser detector\n" +
 			"https://github.com/ded/bowser\n" +
-			"MIT License | (c) Dustin Diaz 2014\n"
+			"MIT License | (c) Dustin Diaz 2014"
 	};
 
 module.exports = ( function() {
 	var plugins = [
 		new ExtractTextPlugin( {
-			filename: "style.css",
+			filename: "latteart.css",
 			disable: false,
 			allChunks: true
 		} ),
 
 		// banner 삽입
-		new webpack.BannerPlugin( _banners.bowserLicense ),
-		new webpack.BannerPlugin( _banners.jqueryUILicense ),
-		new webpack.BannerPlugin( _banners.jqueryLicense ),
-		new webpack.BannerPlugin( _banners.minify ),
+		new webpack.BannerPlugin( {
+			banner: _banners.bowserLicense,
+			entryOnly: true
+		} ),
+		new webpack.BannerPlugin( {
+			banner: _banners.jqueryUILicense,
+			entryOnly: true
+		} ),
+		new webpack.BannerPlugin( {
+			banner: _banners.jqueryLicense,
+			entryOnly: true
+		} ),
+		new webpack.BannerPlugin( {
+			banner: _banners.minify,
+			entryOnly: false
+		} ),
 
 		new ReplaceBundlePlugin( [
 			{
@@ -62,6 +72,7 @@ module.exports = ( function() {
 				}
 			}
 		] ),
+
 		new HtmlWebpackPlugin( {
 			template: "./src/tpls/index.html",
 			inject: "head"

@@ -49,15 +49,15 @@ UI.prototype = {
 		data = data || {};
 		uiData.configs = $.extend( {
 			navbar: {
-				left: [ "load", "save", "undo", "redo" ],
-				right: [ "zoom" ]
+				left: [ "undo", "redo" ],
+				right: [ "load", "save" ]
 			},
 			toolbar: [ "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ]
 		}, data.configs );
 
 		self._createContainer( uiData );
-		self._createNavbar( uiData );
 		self._createRenderer( uiData );
+		self._createNavbar( uiData );
 		self._createToolbar( uiData );
 
 		return uiData;
@@ -68,7 +68,7 @@ UI.prototype = {
 			widget = $.lui.container(),
 			widgetData = widget.getHTMLData();
 
-		widgetData.attr.className.push( "lui-latteart", "lui-skin-default", "lui-border-all" );
+		widgetData.attr.className.push( "lui-latteart", "lui-skin-default" );
 		uiData.htmlData = widgetData;
 		uiData.widgets.container = widget;
 	},
@@ -80,7 +80,8 @@ UI.prototype = {
 			navbar = $.lui.container(),
 			navbarData = navbar.getHTMLData(),
 			createControlSet = function( pos ) {
-				var config = navbarConfig[ pos.toLowerCase() ],
+				var posLowerCase = pos.toLowerCase(),
+					config = navbarConfig[ posLowerCase ],
 					i, length,
 					controlConfig, control, controlData,
 					controlSet, controlSetData;
@@ -106,6 +107,7 @@ UI.prototype = {
 					uiData.widgets[ controlConfig ] = control;
 				}
 
+				controlSetData.attr.className.push( "lui-bar-" + posLowerCase );
 				navbarData.contents.push( controlSetData );
 				uiData.widgets[ "navbar" + pos ] = controlSet;
 			};
@@ -115,17 +117,30 @@ UI.prototype = {
 			createControlSet( "Right" );
 		}
 
+		navbarData.attr.className.push( "lui-area", "lui-bar", "lui-navbar" );
 		uiData.htmlData.contents.push( navbarData );
 		uiData.widgets.navbar = navbar;
 	},
 
 	_createRenderer: function( uiData ) {
 		var $ = this.$,
-			renderer = $.lui.renderer(),
-			rendererData = renderer.getHTMLData();
+			renderer = $.lui.container(),
+			rendererData = renderer.getHTMLData(),
+			canvaswrap = $.lui.container(),
+			canvaswrapData = canvaswrap.getHTMLData(),
+			canvas = $.lui.canvas(),
+			canvasData = canvas.getHTMLData();
 
-		uiData.htmlData.contents.push( rendererData );
-		uiData.widgets.renderer = renderer;
+			canvaswrapData.contents.push( canvasData );
+			uiData.widgets.canvas = canvas;
+
+			canvaswrapData.attr.className.push( "lui-canvas-wrap" );
+			rendererData.contents.push( canvaswrapData );
+			uiData.widgets.canvaswrap = canvaswrap;
+
+			rendererData.attr.className.push( "lui-area lui-renderer" );
+			uiData.htmlData.contents.push( rendererData );
+			uiData.widgets.renderer = renderer;
 	},
 
 	_createToolbar: function( uiData ) {
@@ -154,6 +169,7 @@ UI.prototype = {
 			}
 		}
 
+		toolbarData.attr.className.push( "lui-area", "lui-bar", "lui-toolbar" );
 		uiData.htmlData.contents.push( toolbarData );
 		uiData.widgets.toolbar = toolbar;
 	},

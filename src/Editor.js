@@ -1,25 +1,32 @@
 var UI = require( "./UI.js" );
 
-function Editor( id, configs, editorManager ) {
-	var self = this,
-		$ = self.$ = editorManager.$;
+function Editor( id, editorManager ) {
+	var self = this;
 
-	self.configs = configs = $.extend( { id: id }, configs );
-	self.language = configs.language || "ko_KR";
 	self.id = id;
+	self.$ = editorManager.$;
 	self.env = editorManager.env;
+	self.configs = null;
+	self.language = null;
 	self.finalTasks = [];
 	self.ui = null;
 	self.canvasContext = null;
 }
 
 Editor.prototype = {
-	create: function() {
+	create: function( loaded ) {
 		var self = this,
-			configs = self.configs,
-			ui = self.ui = new UI( self );
+			$ = self.$,
+			ui = self.ui = new UI( self ),
+			plugins = loaded.plugins,
+			name, configs;
 
-		// 플러그인 로드
+		self.configs = configs = $.extend( { id: self.id }, loaded.configs );
+		self.language = configs.language || "ko_KR";
+
+		for ( name in plugins ) {
+			plugins[ name ]( self );
+		}
 
 		self
 			.one( "uicreatefail", function() {

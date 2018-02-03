@@ -11,11 +11,75 @@
 
 	@import "theme";
 
+	//----------------------------------
+	// Logical Area
+	//----------------------------------
 	&.lui-skin-@{skinNamespace} {
 		position: relative;
 		width: 100%;
 		height: 100%;
 		border: 0;
 		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.lui-area {
+		position: absolute;
+		width: 100%;
+	}
+
+	.lui-bar {
+		background-color: #fff;
+		height: 4rem;
+		text-align: center;
+
+		button {
+			width: 6rem;
+			height: 4rem;
+
+			&.lui-state-default,
+			&.lui-state-default span {
+				border-color: transparent;
+			}
+
+			&.lui-state-hover,
+			&.lui-state-focus {
+				border-color: @borderColorHover;
+				z-index: 1;
+			}
+
+			&.lui-state-active {
+				border-color: @borderColorActive;
+				z-index: 1;
+			}
+		}
+
+		&.lui-navbar {
+			top: 0;
+		}
+		
+		&.lui-toolbar {
+			bottom: 0;
+		}
+	}
+
+	.lui-bar-left {
+		float: left;
+	}
+
+	.lui-bar-right {
+		float: right;
+	}
+
+	.lui-renderer {
+		height: 100%;
+		background-color: black;
+		display: table;
+	}
+
+	.lui-canvas-wrap {
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
 	}
 }

@@ -4,7 +4,9 @@ var document = window.document,
 	Editor = require( "./Editor.js" ),
 
 	_prepared = false,
+	_pluginList = [ "load", "save" ],
 	_loadedConfigs = {},
+	_loadedPlugins = {},
 
 	EditorManager = {
 		$: $,
@@ -36,6 +38,20 @@ var document = window.document,
 				}
 
 				_prepared = true;
+			}
+
+			function loadPlugins() {
+				var i, listLength, pluginName;
+
+				listLength = _pluginList.length;
+
+				for ( i = 0; i < listLength; i++ ) {
+					pluginName = _pluginList[ i ];
+
+					if ( !_loadedPlugins[ pluginName ] ) {
+						_loadedPlugins[ pluginName ] = require( "./plugins/" + pluginName + ".js"  );
+					}
+				}
 			}
 
 			function loadConfigs( url, type ) {
@@ -86,13 +102,18 @@ var document = window.document,
 				$.extend( {}, configs ) :
 					loadConfigs( configs, type );
 
+			loadPlugins();
+
 			require( "./skins/default.less" );
 
 			$( function() {
-				editor = new Editor( id, configs, self );
+				editor = new Editor( id, self );
 				self.editors[ editor.id ] = editor;
 				self.activeEditor = editor;
-				editor.create();
+				editor.create( {
+					configs: configs,
+					plugins: _loadedPlugins
+				} );
 
 				if ( typeof callback === "function" ) {
 					editor.on( "editorcreate", function() {

@@ -1,10 +1,6 @@
 @import "common";
 
 //----------------------------------
-// Theme
-//----------------------------------
-
-//----------------------------------
 // Component containers
 //----------------------------------
 .lui-widget {
@@ -169,8 +165,8 @@
 
 /* states and images */
 .lui-icon {
-	width: 16px;
-	height: 16px;
+	width: 32px;
+	height: 32px;
 }
 
 /* positioning */
@@ -189,55 +185,6 @@
 .lui-icon-text { background-image: url(); }
 .lui-icon-brush { background-image: url(); }
 
-//----------------------------------
-// Misc visuals
-//----------------------------------
-
-// Corner radius
-.lui-corner-all,
-.lui-corner-top,
-.lui-corner-left,
-.lui-corner-tl {
-	border-top-left-radius: @cornerRadius;
-}
-
-.lui-corner-all,
-.lui-corner-top,
-.lui-corner-right,
-.lui-corner-tr {
-	border-top-right-radius: @cornerRadius;
-}
-
-.lui-corner-all,
-.lui-corner-bottom,
-.lui-corner-left,
-.lui-corner-bl {
-	border-bottom-left-radius: @cornerRadius;
-}
-
-.lui-corner-all,
-.lui-corner-bottom,
-.lui-corner-right,
-.lui-corner-br {
-	border-bottom-right-radius: @cornerRadius;
-}
-
-// Border
-&.lui-border-top,
-& .lui-border-top {
-	border-top: 1px solid @borderColorDefault;
-}
-
-&.lui-border-bottom,
-& .lui-border-bottom {
-	border-bottom: 1px solid @borderColorDefault;
-}
-
-&.lui-border-all,
-& .lui-border-all {
-	border: 1px solid @borderColorDefault;
-}
-
 // Overlays
 .lui-widget-overlay {
 	background: @backgroundColorOverlay @backgroundImageUrlOverlay @backgroundOverlayXPosition @backgroundOverlayYPosition @backgroundOverlayRepeat;
@@ -250,35 +197,4 @@
 	background: @backgroundColorShadow @backgroundImageUrlShadow @backgroundShadowXPosition @backgroundShadowYPosition backgroundShadowRepeat;
 	opacity: @opacityShadow;
 	filter: @opacityFilterShadow;
-	border-radius: @cornerRadiusShadow;
-}
-
-//----------------------------------
-// Logical Area
-//----------------------------------
-.lui-toolbar {
-	padding: 4px;
-	background-color: #fff;
-
-	& > * {
-		vertical-align:middle;
-	}
-
-	button {
-		&.lui-state-default,
-		&.lui-state-default span {
-			border-color: transparent;
-		}
-
-		&.lui-state-hover,
-		&.lui-state-focus {
-			border-color: @borderColorHover;
-			z-index: 1;
-		}
-
-		&.lui-state-active {
-			border-color: @borderColorActive;
-			z-index: 1;
-		}
-	}
 }

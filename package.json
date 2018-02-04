@@ -9,6 +9,7 @@
   "dependencies": {},
   "devDependencies": {
     "bowser": "^1.9.1",
+    "clean-webpack-plugin": "^0.1.18",
     "css-loader": "^0.28.9",
     "eslint": "^4.16.0",
     "eslint-config-jquery": "1.0.0",

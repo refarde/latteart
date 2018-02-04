@@ -10,7 +10,7 @@ function Editor( id, editorManager ) {
 	self.language = null;
 	self.finalTasks = [];
 	self.ui = null;
-	self.canvasContext = null;
+	self.context2d = null;
 }
 
 Editor.prototype = {
@@ -82,7 +82,7 @@ Editor.prototype = {
 
 		self._final();
 
-		self.canvasContext = null;
+		self.context2d = null;
 		self.ui = null;
 		self.finalTasks = null;
 		self.browser = null;
@@ -125,18 +125,23 @@ Editor.prototype = {
 		console.log( args );
 	},
 
+	getCanvas: function() {
+		return this.ui.getCanvas();
+	},
+
 	getContext: function() {
 		var self = this,
 			canvas;
 
-		if ( !self.canvasContext ) {
-			canvas = self.uiManager.getCanvas();
+		if ( !self.context2d ) {
+			canvas = self.ui.getCanvas();
 
 			if ( canvas ) {
-				self.canvasContext = canvas.contentWindow;
+				self.context2d = canvas.getContext( "2d" );
 			}
 		}
-		return self.canvasContext;
+
+		return self.context2d;
 	},
 
 	addFinalTask: function( task ) {

@@ -4,7 +4,10 @@ function UI( editor ) {
 		$;
 
 	self.editor = editor;
-	$ = self.$ = editor.$;
+	self.$ = $ = editor.$;
+	self.$container = null;
+	self.$canvas = null;
+	self.context2d = null;
 
 	if ( !$.lui ) {
 		require( "./lui/lui.js" )( $, editor.env );
@@ -131,16 +134,16 @@ UI.prototype = {
 			canvas = $.lui.canvas(),
 			canvasData = canvas.getHTMLData();
 
-			canvaswrapData.contents.push( canvasData );
-			uiData.widgets.canvas = canvas;
+		canvaswrapData.contents.push( canvasData );
+		uiData.widgets.canvas = canvas;
 
-			canvaswrapData.attr.className.push( "lui-canvas-wrap" );
-			rendererData.contents.push( canvaswrapData );
-			uiData.widgets.canvaswrap = canvaswrap;
+		canvaswrapData.attr.className.push( "lui-canvas-wrap" );
+		rendererData.contents.push( canvaswrapData );
+		uiData.widgets.canvaswrap = canvaswrap;
 
-			rendererData.attr.className.push( "lui-area lui-renderer" );
-			uiData.htmlData.contents.push( rendererData );
-			uiData.widgets.renderer = renderer;
+		rendererData.attr.className.push( "lui-area lui-renderer" );
+		uiData.htmlData.contents.push( rendererData );
+		uiData.widgets.renderer = renderer;
 	},
 
 	_createToolbar: function( uiData ) {
@@ -199,6 +202,10 @@ UI.prototype = {
 				$target.css( "display", $target.attr( "data-la-before" ) || "block" );
 				result = false;
 			} finally {
+				if ( result ) {
+					self.$container = $buildedContainer;
+				}
+
 				editor.trigger( result ? "uicreate" : "uicreatefail" );
 			}
 		} );
@@ -260,9 +267,35 @@ UI.prototype = {
 		self._final( container );
 
 		container.remove();
-		container = null;
+
+		self.$container = container = null;
 		self.widgets = widgets = null;
 		self.editor = null;
+	},
+
+	getContainer: function() {
+		var self = this;
+
+		if ( !self.$container ) {
+			return null;
+		}
+
+		return self.$container[ 0 ];
+	},
+
+	getCanvas: function() {
+		var self = this,
+			$container = self.$container;
+
+		if ( !$container ) {
+			return null;
+		}
+
+		if ( !self.$canvas ) {
+			self.$canvas = $container.find( ".lui-canvas" );
+		}
+
+		return self.$canvas[ 0 ];
 	}
 };
 

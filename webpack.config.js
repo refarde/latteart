@@ -2,8 +2,8 @@
 var path = require( "path" ),
 	webpack = require( "webpack" ),
 	HtmlWebpackPlugin = require( "html-webpack-plugin" ),
-	ExtractTextPlugin = require( "extract-text-webpack-plugin" ),
 	ReplaceBundlePlugin = require( "replace-bundle-webpack-plugin" ),
+	CleanWebpackPlugin = require( "clean-webpack-plugin" ),
 	_args = require( "yargs" ).argv,
 	_package = require( "./package.json" ),
 	_isProduction = _args.p || process.env.NODE_ENV === "production",
@@ -35,30 +35,7 @@ var path = require( "path" ),
 
 module.exports = ( function() {
 	var plugins = [
-		new ExtractTextPlugin( {
-			filename: "latteart.css",
-			disable: false,
-			allChunks: true
-		} ),
-
-		// banner 삽입
-		new webpack.BannerPlugin( {
-			banner: _banners.bowserLicense,
-			entryOnly: true
-		} ),
-		new webpack.BannerPlugin( {
-			banner: _banners.jqueryUILicense,
-			entryOnly: true
-		} ),
-		new webpack.BannerPlugin( {
-			banner: _banners.jqueryLicense,
-			entryOnly: true
-		} ),
-		new webpack.BannerPlugin( {
-			banner: _banners.minify,
-			entryOnly: false
-		} ),
-
+		new CleanWebpackPlugin( [ "dist" ] ),
 		new ReplaceBundlePlugin( [
 			{
 				partten: /@@EDITOR_VERSION@@/g,
@@ -89,9 +66,31 @@ module.exports = ( function() {
 
 					// Drop console statements
 					drop_console: true
+				},
+				output: {
+					comments: false
 				}
 			} ),
-			new webpack.optimize.OccurrenceOrderPlugin()
+
+			new webpack.optimize.OccurrenceOrderPlugin(),
+
+			// banner 삽입
+			new webpack.BannerPlugin( {
+				banner: _banners.bowserLicense,
+				entryOnly: true
+			} ),
+			new webpack.BannerPlugin( {
+				banner: _banners.jqueryUILicense,
+				entryOnly: true
+			} ),
+			new webpack.BannerPlugin( {
+				banner: _banners.jqueryLicense,
+				entryOnly: true
+			} ),
+			new webpack.BannerPlugin( {
+				banner: _banners.minify,
+				entryOnly: false
+			} )
 		].concat( plugins );
 	}
 
@@ -113,10 +112,7 @@ module.exports = ( function() {
 				include: [
 					path.resolve( __dirname, "src/skins" )
 				],
-				use: ExtractTextPlugin.extract( {
-					fallback: "style-loader",
-					use: [ "css-loader", "less-loader" ]
-				} )
+				use: [ "style-loader", "css-loader", "less-loader" ]
 			} ]
 		}
 	};

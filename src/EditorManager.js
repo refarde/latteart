@@ -4,7 +4,7 @@ var document = window.document,
 	Editor = require( "./Editor.js" ),
 
 	_prepared = false,
-	_pluginList = [ "load", "save", "rotation" ],
+	_pluginList = [ "load", "save", "rotation", "flip" ],
 	_loadedConfigs = {},
 	_loadedPlugins = {},
 

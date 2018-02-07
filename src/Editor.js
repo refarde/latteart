@@ -1,4 +1,5 @@
-var UI = require( "./UI.js" );
+var UI = require( "./UI.js" ),
+	History = require( "./History.js" );
 
 function Editor( id, editorManager ) {
 	var self = this;
@@ -23,6 +24,7 @@ Editor.prototype = {
 
 		self.configs = configs = $.extend( { id: self.id }, loaded.configs );
 		self.language = configs.language || "ko_KR";
+		self.history = new History( self );
 
 		for ( name in plugins ) {
 			plugins[ name ]( self );
@@ -83,6 +85,7 @@ Editor.prototype = {
 		self._final();
 
 		self.context2d = null;
+		self.history = null;
 		self.ui = null;
 		self.finalTasks = null;
 		self.browser = null;

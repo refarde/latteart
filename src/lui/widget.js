@@ -205,7 +205,7 @@ module.exports = function( $ ) {
 						return $.error( "cannot call methods on " + name + " prior to initialization; " +
 							"attempted to call method '" + options + "'" );
 					}
-					if ( !$.isFunction( instance[ options ] ) || options.charAt( 0 ) === "_" ) {
+					if ( !$.lui.isFunction( instance[ options ] ) || options.charAt( 0 ) === "_" ) {
 						return $.error( "no such method '" + options + "' for " + name + " widget instance" );
 					}
 					methodValue = instance[ options ].apply( instance, args );
@@ -604,7 +604,7 @@ module.exports = function( $ ) {
 			}
 
 			this.element.trigger( event, data );
-			return !( $.isFunction( callback ) &&
+			return !( $.lui.isFunction( callback ) &&
 				callback.apply( this.element[ 0 ], [ event ].concat( data ) ) === false ||
 				event.isDefaultPrevented() );
 		}

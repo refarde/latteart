@@ -106,7 +106,7 @@ module.exports = function( $ ) {
 						event.stopImmediatePropagation();
 					}
 
-					if ( options.click && $.isFunction( options.click ) ) {
+					if ( options.click && $.lui.isFunction( options.click ) ) {
 						options.click( event );
 					}
 				} );

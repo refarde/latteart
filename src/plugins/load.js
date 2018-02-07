@@ -15,6 +15,8 @@ function LoadPlugin( editor ) {
 						_canvas.width = this.width;
 						_canvas.height = this.height;
 						_ctx.drawImage( img, 0, 0, this.width, this.height );
+						editor.history.clear();
+						editor.history.push();
 					};
 
 					img.src = window.URL.createObjectURL( e.target.files[ 0 ] );

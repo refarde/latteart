@@ -25,6 +25,7 @@ function FlipPlugin( editor ) {
 
 			_ctx.clearRect( 0, 0, _canvas.width, _canvas.height );
 			_ctx.drawImage( _dummyCanvas, 0, 0, _canvas.width, _canvas.height, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
+			editor.history.push();
 		} );
 	}
 

@@ -1,4 +1,4 @@
-module.exports = function( editor ) {
+function SavePlugin( editor ) {
 	console.log( editor.id + ": save" );
 
 	var IMAGE_MIMES = [ "image/png", "image/bmp", "image/gif", "image/jpeg", "image/tiff" ],
@@ -33,4 +33,6 @@ module.exports = function( editor ) {
 	}
 
 	editor.on( "editorcreate", init );
-};
+}
+
+module.exports = SavePlugin;

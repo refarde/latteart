@@ -1,4 +1,4 @@
-module.exports = function( editor ) {
+function FlipPlugin( editor ) {
 	console.log( editor.id + ": flip" );
 
 	var $ = editor.$,
@@ -29,4 +29,6 @@ module.exports = function( editor ) {
 	}
 
 	editor.on( "editorcreate", init );
-};
+}
+
+module.exports = FlipPlugin;

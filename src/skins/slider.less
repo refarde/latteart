@@ -1,0 +1,94 @@
+@import "common";
+
+//----------------------------------
+// Slider
+//----------------------------------
+
+.lui-slider {
+
+	// Webkit(Chrome, Safari)
+
+	-webkit-appearance: none;	// removes default webkit styles
+
+	&::-webkit-slider-runnable-track {
+		width: 300px;
+		height: 5px;
+		background: #ddd;
+		border: none;
+		border-radius: 3px;
+	}
+	&::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: goldenrod;
+		margin-top: -4px;
+	}
+	&:focus {
+		outline: none;
+
+		&::-webkit-slider-runnable-track {
+			background: #ccc;
+		}
+	}
+
+	// FireFox
+
+	border: 1px solid white;	// fix for FF unable to apply focus style bug
+	width: 300px;				// required for proper track sizing in FF
+
+	&::-moz-range-track {
+		width: 300px;
+		height: 5px;
+		background: #ddd;
+		border: none;
+		border-radius: 3px;
+	}
+	&::-moz-range-thumb {
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: goldenrod;
+	}
+	&:-moz-focusring {			// hide the outline behind the border
+		outline: 1px solid white;
+		outline-offset: -1px;
+	}
+
+	// IE
+
+	&::-ms-track {
+		width: 300px;
+		height: 5px;
+		background: transparent;	// remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead
+		border-color: transparent;	// leave room for the larger thumb to overflow with a transparent border
+		border-width: 6px 0;
+		color: transparent;			// remove default tick marks
+	}
+	&::-ms-fill-lower {
+		background: #777;
+		border-radius: 10px;
+	}
+	&::-ms-fill-upper {
+		background: #ddd;
+		border-radius: 10px;
+	}
+	&::-ms-thumb {
+		border: none;
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		background: goldenrod;
+	}
+	&:focus {
+		&::-ms-fill-lower {
+			background: #888;
+		}
+		&::-ms-fill-upper {
+			background: #ccc;
+		}
+	}
+}

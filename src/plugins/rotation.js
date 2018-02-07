@@ -1,4 +1,4 @@
-module.exports = function( editor ) {
+function RotationPlugin( editor ) {
 	console.log( editor.id + ": rotation" );
 
 	var $ = editor.$,
@@ -32,4 +32,6 @@ module.exports = function( editor ) {
 	}
 
 	editor.on( "editorcreate", init );
-};
+}
+
+module.exports = RotationPlugin;

@@ -1,4 +1,4 @@
-module.exports = function( editor ) {
+function LoadPlugin( editor ) {
 	console.log( editor.id + ": load" );
 
 	var $ = editor.$,
@@ -30,4 +30,6 @@ module.exports = function( editor ) {
 	}
 
 	editor.on( "editorcreate", init );
-};
+}
+
+module.exports = LoadPlugin;

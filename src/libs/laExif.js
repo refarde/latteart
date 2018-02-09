@@ -12,6 +12,9 @@
 
 	var debug = false,
 		root = this,
+		XMLHttpRequest = window.XMLHttpRequest,
+		FileReader = window.FileReader,
+		Uint8Array = window.Uint8Array,
 		EXIF,
 		ExifTags, TiffTags, GPSTags, IFD1Tags,
 		StringValues, IptcFieldMap;
@@ -371,7 +374,7 @@
 		var binary = window.atob( base64.replace( /^data\:([^\;]+)\;base64,/gmi, "" ) ),
 			len = binary.length,
 			buffer = new window.ArrayBuffer( len ),
-			view = new window.Uint8Array( buffer ),
+			view = new Uint8Array( buffer ),
 			i;
 
 		for ( i = 0; i < len; i++ ) {
@@ -440,8 +443,8 @@
 				http.responseType = "arraybuffer";
 				http.send( null );
 			}
-		} else if ( self.FileReader &&
-				( img instanceof self.Blob || img instanceof self.File ) ) {
+		} else if ( window.FileReader &&
+				( img instanceof window.Blob || img instanceof window.File ) ) {
 			fileReader = new FileReader();
 			fileReader.onload = function( e ) {
 				_log( "Got file of length " + e.target.result.byteLength );
@@ -757,8 +760,8 @@
 					// extract the thumbnail
 						var tOffset = tiffStart + thumbTags.JpegIFOffset;
 						var tLength = thumbTags.JpegIFByteCount;
-						thumbTags.blob = new Blob(
-							[ new window.Uint8Array( dataView.buffer, tOffset, tLength ) ],
+						thumbTags.blob = new window.Blob(
+							[ new Uint8Array( dataView.buffer, tOffset, tLength ) ],
 							{ type: "image/jpeg" }
 						);
 					}
@@ -901,7 +904,7 @@
 	}
 
 	function findXMPinJPEG( file ) {
-		if ( !( "DOMParser" in self ) ) {
+		if ( !( "DOMParser" in window ) ) {
 			console.warn( "XML parsing not supported without DOMParser" );
 			return;
 		}
@@ -916,7 +919,7 @@
 
 		var offset = 2,
 			length = file.byteLength,
-			dom = new DOMParser();
+			dom = new window.DOMParser();
 
 		while ( offset < ( length - 4 ) ) {
 			if ( getStringFromDB( dataView, offset, 4 ) === "http" ) {
@@ -1039,6 +1042,8 @@
 	};
 
 	EXIF.getData = function( img, callback ) {
+		var self = this;
+
 		if ( ( ( self.Image && img instanceof self.Image ) ||
 			( self.HTMLImageElement && img instanceof self.HTMLImageElement ) ) &&
 			!img.complete ) {

@@ -4,4 +4,5 @@ module.exports = function( $, env ) {
 	require( "./container.js" )( $ );
 	require( "./canvas.js" )( $ );
 	require( "./button.js" )( $ );
+	require( "./slider.js" )( $ );
 };

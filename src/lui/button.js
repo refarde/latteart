@@ -26,7 +26,7 @@ module.exports = function( $ ) {
 				buttonText = options.label || "&#160;",
 				icons = options.icons,
 				tooltip = options.tooltip,
-				buttonClasses = "lui-button lui-widget lui-state-default lui-corner-all",
+				buttonClasses = [ "lui-button", "lui-widget", "lui-state-default", "lui-corner-all" ],
 				contents = [ "<span class=\"lui-button-text\">" + buttonText + "</span>" ];
 
 			this.htmlData = {

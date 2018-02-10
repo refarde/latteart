@@ -8,6 +8,7 @@
 
 	@import "container";
 	@import "button";
+	@import "slider";
 
 	@import "theme";
 
@@ -69,6 +70,21 @@
 
 	.lui-bar-right {
 		float: right;
+	}
+
+	.lui-rangebar {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+	
+		.lui-part-back {
+			display: table-cell;
+			width: 6rem;
+		}
+		
+		.lui-part-slider {
+			display: table-cell;
+		}
 	}
 
 	.lui-renderer {

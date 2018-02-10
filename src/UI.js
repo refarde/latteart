@@ -147,34 +147,82 @@ UI.prototype = {
 	},
 
 	_createToolbar: function( uiData ) {
-		var $ = this.$,
+		var self = this,
+			$ = self.$,
 			configs = uiData.configs || {},
 			toolbar = $.lui.container(),
-			toolbarData = toolbar.getHTMLData(),
-			controlConfig, control, controlData,
-			i, length, config;
+			toolbarData = toolbar.getHTMLData();
 
-		if ( configs.toolbar !== false ) {
-			config = configs.toolbar;
-			length = config.length;
-
-			for ( i = 0; i < length; i++ ) {
-				controlConfig = config[ i ];
-				control = $.lui.button( {
-					label: controlConfig,
-					icons: {
-						primary: controlConfig
-					}
-				} );
-				controlData = control.getHTMLData();
-				toolbarData.contents.push( controlData );
-				uiData.widgets[ controlConfig ] = control;
-			}
+		if ( configs.toolbar === false ) {
+			return;
 		}
+
+		self._createRangebar( uiData, toolbarData );
+		self._createMainbar( uiData, toolbarData );
 
 		toolbarData.attr.className.push( "lui-area", "lui-bar", "lui-toolbar" );
 		uiData.htmlData.contents.push( toolbarData );
-		uiData.widgets.toolbar = toolbar;
+		uiData.widgets.mainbar = toolbar;
+	},
+
+	_createMainbar: function( uiData, toolbarData ) {
+		var $ = this.$,
+			configs = uiData.configs || {},
+			mainbar = $.lui.container(),
+			mainbarData = mainbar.getHTMLData(),
+			config = configs.toolbar,
+			length = config.length,
+			i, controlConfig, control, controlData;
+
+		for ( i = 0; i < length; i++ ) {
+			controlConfig = config[ i ];
+			control = $.lui.button( {
+				label: controlConfig,
+				icons: {
+					primary: controlConfig
+				}
+			} );
+			controlData = control.getHTMLData();
+			mainbarData.contents.push( controlData );
+			uiData.widgets[ controlConfig ] = control;
+		}
+
+		mainbarData.attr.className.push( "lui-bar", "lui-mainbar" );
+		toolbarData.contents.push( mainbarData );
+		uiData.widgets.mainbar = mainbar;
+	},
+
+	_createRangebar: function( uiData, toolbarData ) {
+		var $ = this.$,
+			rangebar = $.lui.container(),
+			rangebarData = rangebar.getHTMLData(),
+			backButton, backButtonData,
+			backButtonWrap, backButtonWrapData,
+			slider, sliderData;
+
+		backButtonWrap = $.lui.container();
+		backButtonWrapData = backButtonWrap.getHTMLData();
+		backButton = $.lui.button( {
+			label: "back",
+			icons: {
+				primary: "back"
+			}
+		} );
+		backButtonData = backButton.getHTMLData();
+		backButtonWrapData.attr.className.push( "lui-part-back" );
+		backButtonWrapData.contents.push( backButtonData );
+		rangebarData.contents.push( backButtonWrapData );
+		uiData.widgets.rangebarback = backButton;
+
+		slider = $.lui.slider();
+		sliderData = slider.getHTMLData();
+		backButtonData.attr.className.push( "lui-part-slider" );
+		rangebarData.contents.push( sliderData );
+		uiData.widgets.slider = slider;
+
+		rangebarData.attr.className.push( "lui-rangebar" );
+		toolbarData.contents.push( rangebarData );
+		uiData.widgets.rangebar = rangebar;
 	},
 
 	_render: function( target, htmlData ) {

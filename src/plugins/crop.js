@@ -3,6 +3,7 @@ function CropPlugin( editor ) {
 
 	var $ = editor.$,
 		_$btnCrop, _windowSize,
+		_$viewport, _$overlay,
 		_canvas, _ctx;
 
 	function init() {
@@ -19,32 +20,32 @@ function CropPlugin( editor ) {
 			height: w.innerWidth || e.clientWidth || g.clientWidth
 		};
 
-		this.elements = {};
+		_createControl();
 
 		_$btnCrop.on( "click", function() {
-
+			_$viewport.show();
+			_$overlay.show();
 
 			//editor.history.push();
 		} );
 	}
 
-	function _create() {
-		var self = this,
-			$viewport =
-				$( "<div class=\"lui-viewport\" tabindex=\"0\"  style=\"" +
-					"width:100vw; height:100vh;" +
-					"\"></div>" ),
-			$overlay =
-				$( "<div class=\"lui-overlay\" style=\"" +
-					[
-						"width:" + _canvas.width + "px",
-						"height:" + _canvas.height + "px",
-						"top:" + ( ( _windowSize.height - _canvas.height ) / 2 ) + "px",
-						"left:" + ( ( _windowSize.width - _canvas.width ) / 2 ) + "px"
-					].join( ";" ) +
-					"\"></div>" );
+	function _createControl() {
+		_$viewport =
+			$( "<div class=\"lui-viewport\" tabindex=\"0\"  style=\"" +
+				"width:100vw; height:100vh;" +
+				"\"></div>" );
+		_$overlay =
+			$( "<div class=\"lui-overlay\" style=\"" +
+				[
+					"width:" + _canvas.width + "px",
+					"height:" + _canvas.height + "px",
+					"top:" + ( ( _windowSize.height - _canvas.height ) / 2 ) + "px",
+					"left:" + ( ( _windowSize.width - _canvas.width ) / 2 ) + "px"
+				].join( ";" ) +
+				"\"></div>" );
 
-		_canvas.after( $viewport ).after( $overlay );
+		$( _canvas ).after( _$viewport ).after( _$overlay );
 	}
 
 	editor.on( "editorcreate", init );

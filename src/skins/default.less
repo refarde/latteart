@@ -61,6 +61,39 @@
 		
 		&.lui-toolbar {
 			bottom: 0;
+			overflow: hidden;
+
+			box-sizing: border-box;
+			perspective: 0;
+			transform-style: preserve-3d;
+			transform: translate3D(0,0,-4rem);
+
+			& > div {
+				position: absolute;
+
+				width: 100%;
+				backface-visibility: hidden;
+				height: 100%;
+				transition: 0.5s all;
+
+				&:nth-of-type(1) {
+					transform: rotateX(0deg) translate3D(0,0,4rem);
+				}
+
+				&:nth-of-type(2) {
+					transform: rotateX(-90deg) translate3D(0,0,4rem);
+				}
+			}
+
+			&.lui-rangebar-visible {
+				& > div:nth-of-type(1){
+					transform: rotateX(90deg) translate3D(0,0,4rem);
+				}
+
+				& > div:nth-of-type(2){
+					transform: rotateX(0) translate3D(0,0,4rem);
+				}
+			}
 		}
 	}
 

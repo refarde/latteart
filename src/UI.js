@@ -157,8 +157,8 @@ UI.prototype = {
 			return;
 		}
 
-		self._createRangebar( uiData, toolbarData );
 		self._createMainbar( uiData, toolbarData );
+		self._createRangebar( uiData, toolbarData );
 
 		toolbarData.attr.className.push( "lui-area", "lui-bar", "lui-toolbar" );
 		uiData.htmlData.contents.push( toolbarData );

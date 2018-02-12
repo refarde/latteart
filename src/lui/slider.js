@@ -40,6 +40,13 @@ module.exports = function( $ ) {
 					} );
 		},
 
+		_setOption: function( key, value ) {
+			var self = this;
+
+			self._super( key, value );
+			self.element.attr( self.options );
+		},
+
 		stepUp: function( step ) {
 			this._$rangeInput[ 0 ].stepUp( step );
 		},

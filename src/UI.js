@@ -162,7 +162,7 @@ UI.prototype = {
 
 		toolbarData.attr.className.push( "lui-area", "lui-bar", "lui-toolbar" );
 		uiData.htmlData.contents.push( toolbarData );
-		uiData.widgets.mainbar = toolbar;
+		uiData.widgets.toolbar = toolbar;
 	},
 
 	_createMainbar: function( uiData, toolbarData ) {
@@ -271,12 +271,17 @@ UI.prototype = {
 	},
 
 	_postRender: function() {
-		var widgets = this.widgets,
+		var self = this,
+			widgets = self.widgets,
 			key;
 
 		for ( key in widgets ) {
 			widgets[ key ].init();
 		}
+
+		widgets.rangebarback.element.on( "click", function() {
+			self.toggleRangebar( false );
+		} );
 	},
 
 	_final: function() {
@@ -344,6 +349,17 @@ UI.prototype = {
 		}
 
 		return self.$canvas[ 0 ];
+	},
+
+	toggleRangebar: function( state ) {
+		var widgets = this.widgets,
+			sliderElmenet = widgets.slider.element;
+
+		widgets.toolbar.element.toggleClass( "lui-rangebar-visible", state );
+
+		if ( !state ) {
+			sliderElmenet.off( ".latte" );
+		}
 	}
 };
 

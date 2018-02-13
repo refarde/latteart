@@ -13,12 +13,12 @@ module.exports = function( $ ) {
 			this.htmlData = {
 				tag: "div",
 				attr: {
-					className: [ "lui-slider" ]
+					className: [ "lui-slider-wrap" ]
 				},
 				contents: [ {
 					tag: "input",
 					attr: {
-						className: [ "lui-slider-range" ],
+						className: [ "lui-slider" ],
 						type: "range",
 						min: options.min,
 						max: options.max,
@@ -30,29 +30,31 @@ module.exports = function( $ ) {
 		},
 
 		_init: function() {
-			var self = this;
+			var self = this,
+				element =
+					self.element.find( ".lui-slider" )
+						.on( "change", function( e ) {
+							var value = self.options.value = e.target.value;
+							self._trigger( "change", e, { value: value } );
+						} );
 
-			self._$rangeInput =
-				self.element.find( ".lui-slider-range" )
-					.on( "change", function( e ) {
-						var value = self.options.value = e.target.value;
-						self._trigger( "change", e, { value: value } );
-					} );
+			self.element = element;
+			self.wrap = element.parent();
 		},
 
 		_setOption: function( key, value ) {
 			var self = this;
 
 			self._super( key, value );
-			self.element.attr( self.options );
+			self.element[ 0 ].setAttribute( key, value );
 		},
 
 		stepUp: function( step ) {
-			this._$rangeInput[ 0 ].stepUp( step );
+			this.element[ 0 ].stepUp( step );
 		},
 
 		stepDown: function( step ) {
-			this._$rangeInput[ 0 ].stepDown( step );
+			this.element[ 0 ].stepDown( step );
 		}
 	} );
 };

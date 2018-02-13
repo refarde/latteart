@@ -1,9 +1,9 @@
-function BrightnessPlugin( editor ) {
-	console.log( editor.id + ": Brightness" );
+function ContrastPlugin( editor ) {
+	console.log( editor.id + ": Contrast" );
 
 	var $ = editor.$,
 		_ctx, _canvas, _dummyCanvas, _dummyCtx,
-		_$btnBrightness, _ui, _sliderWidget;
+		_$btnContrast, _ui, _sliderWidget;
 
 	function init() {
 		_canvas = editor.getCanvas();
@@ -13,8 +13,8 @@ function BrightnessPlugin( editor ) {
 
 		_ui = editor.ui;
 		_sliderWidget = _ui.widgets.slider;
-		_$btnBrightness = editor.ui.widgets.brightness.element;
-		_$btnBrightness.on( "click", function() {
+		_$btnContrast = editor.ui.widgets.contrast.element;
+		_$btnContrast.on( "click", function() {
 			_dummyCanvas.width = _canvas.width;
 			_dummyCanvas.height = _canvas.height;
 
@@ -24,17 +24,17 @@ function BrightnessPlugin( editor ) {
 			_sliderWidget
 				.option( "min", -100 )
 				.option( "max", 100 )
-				.option( "value", editor.info.brightness )
+				.option( "value", editor.info.contrast )
 				.element.on( "sliderchange.latte", function( e, ui ) {
-					_setBrightness( ui.value );
-					editor.info.brightness = ui.value;
+					_setContrast( ui.value );
+					editor.info.contrast = ui.value;
 				} );
 
 			_ui.toggleRangebar( true );
 		} );
 	}
 
-	function _setBrightness( value ) {
+	function _setContrast( value ) {
 		var pixels, data, length, i;
 
 		_ctx.drawImage( _dummyCanvas, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
@@ -42,12 +42,12 @@ function BrightnessPlugin( editor ) {
 		data = pixels.data;
 		length = data.length;
 
-		value = parseFloat( value ) || 0;
+		value = ( parseFloat( value ) || 1 );
 
 		for ( i = 0; i < length; i += 4 ) {
-			data[ i ] += value;
-			data[ i + 1 ] += value;
-			data[ i + 2 ] += value;
+			data[ i ] = ( ( ( ( data[ i ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
+			data[ i + 1 ] = ( ( ( ( data[ i + 1 ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
+			data[ i + 2 ] = ( ( ( ( data[ i + 2 ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
 		}
 
 		_ctx.putImageData( pixels, 0, 0 );
@@ -56,4 +56,4 @@ function BrightnessPlugin( editor ) {
 	editor.on( "editorcreate", init );
 }
 
-module.exports = BrightnessPlugin;
+module.exports = ContrastPlugin;

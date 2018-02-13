@@ -12,6 +12,7 @@ function Editor( id, editorManager ) {
 	self.finalTasks = [];
 	self.ui = null;
 	self.context2d = null;
+	self.info = {};
 }
 
 Editor.prototype = {
@@ -84,6 +85,7 @@ Editor.prototype = {
 
 		self._final();
 
+		self.info = null;
 		self.context2d = null;
 		self.history = null;
 		self.ui = null;

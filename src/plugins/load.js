@@ -12,11 +12,17 @@ function LoadPlugin( editor ) {
 					var img = new window.Image();
 
 					img.onload = function() {
-						_canvas.width = this.width;
-						_canvas.height = this.height;
-						_ctx.drawImage( img, 0, 0, this.width, this.height );
+						_canvas.width = this.naturalWidth;
+						_canvas.height = this.naturalHeight;
+						_ctx.drawImage( img, 0, 0, this.naturalWidth, this.naturalHeight );
 						editor.history.clear();
 						editor.history.push();
+						editor.info = {
+							brightness: 0,
+							saturation: 0,
+							contrast: 0
+						};
+						editor.ui.toggleRangebar( false );
 					};
 
 					img.src = window.URL.createObjectURL( e.target.files[ 0 ] );

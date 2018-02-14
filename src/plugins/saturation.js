@@ -3,7 +3,7 @@ function SaturationPlugin( editor ) {
 
 	var $ = editor.$,
 		_ctx, _canvas, _dummyCanvas, _dummyCtx,
-		_$btnSaturation, _ui, _sliderWidget;
+		_$btnSaturation, _ui;
 
 	function init() {
 		_canvas = editor.getCanvas();
@@ -12,7 +12,6 @@ function SaturationPlugin( editor ) {
 		_dummyCtx = _dummyCanvas.getContext( "2d" );
 
 		_ui = editor.ui;
-		_sliderWidget = _ui.widgets.slider;
 		_$btnSaturation = editor.ui.widgets.saturation.element;
 		_$btnSaturation.on( "click", function() {
 			_dummyCanvas.width = _canvas.width;
@@ -21,10 +20,12 @@ function SaturationPlugin( editor ) {
 			_dummyCtx.clearRect( 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 			_dummyCtx.drawImage( _canvas, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 
-			_sliderWidget
-				.option( "min", -100 )
-				.option( "max", 100 )
-				.option( "value", editor.info.saturation )
+			_ui.widgets.slider
+				.option( {
+					min: -100,
+					max: 100,
+					value: editor.info.saturation
+				} )
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setSaturation( ui.value );
 					editor.info.saturation = ui.value;

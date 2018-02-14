@@ -46,7 +46,7 @@ module.exports = function( $ ) {
 			var self = this;
 
 			self._super( key, value );
-			self.element[ 0 ].setAttribute( key, value );
+			self.element.prop( key, value + "" );
 		},
 
 		stepUp: function( step ) {

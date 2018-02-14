@@ -3,7 +3,7 @@ function ContrastPlugin( editor ) {
 
 	var $ = editor.$,
 		_ctx, _canvas, _dummyCanvas, _dummyCtx,
-		_$btnContrast, _ui, _sliderWidget;
+		_$btnContrast, _ui;
 
 	function init() {
 		_canvas = editor.getCanvas();
@@ -12,7 +12,6 @@ function ContrastPlugin( editor ) {
 		_dummyCtx = _dummyCanvas.getContext( "2d" );
 
 		_ui = editor.ui;
-		_sliderWidget = _ui.widgets.slider;
 		_$btnContrast = editor.ui.widgets.contrast.element;
 		_$btnContrast.on( "click", function() {
 			_dummyCanvas.width = _canvas.width;
@@ -21,10 +20,12 @@ function ContrastPlugin( editor ) {
 			_dummyCtx.clearRect( 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 			_dummyCtx.drawImage( _canvas, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 
-			_sliderWidget
-				.option( "min", -100 )
-				.option( "max", 100 )
-				.option( "value", editor.info.contrast )
+			_ui.widgets.slider
+				.option( {
+					min: -100,
+					max: 100,
+					value: editor.info.contrast
+				} )
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setContrast( ui.value );
 					editor.info.contrast = ui.value;

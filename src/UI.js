@@ -353,12 +353,12 @@ UI.prototype = {
 
 	toggleRangebar: function( state ) {
 		var widgets = this.widgets,
-			sliderElmenet = widgets.slider.element;
+			sliderWidget = widgets.slider;
 
 		widgets.toolbar.element.toggleClass( "lui-rangebar-visible", state );
 
 		if ( !state ) {
-			sliderElmenet.off( ".latte" );
+			sliderWidget.element.off( ".latte" );
 		}
 	}
 };

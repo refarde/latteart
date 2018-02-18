@@ -11,7 +11,7 @@ function SavePlugin( editor ) {
 		var i, length;
 
 		_dummyLink = $( "<a/>" )[ 0 ];
-		_canvas = editor.getCanvas();
+		_canvas = editor.canvas;
 		_$btnSave = editor.ui.widgets.save.element;
 
 		length = IMAGE_MIMES.length;
@@ -32,7 +32,7 @@ function SavePlugin( editor ) {
 		} );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = SavePlugin;

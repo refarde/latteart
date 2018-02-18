@@ -4,7 +4,7 @@ function CropPlugin( editor ) {
 	var $ = editor.$,
 		_$btnCrop, _windowSize,
 		_$viewport, _$overlay,
-		_canvas, _ctx;
+		_canvas;
 
 	function init() {
 		var w = window,
@@ -13,7 +13,6 @@ function CropPlugin( editor ) {
 			g = d.getElementsByTagName( "body" )[ 0 ];
 
 		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
 		_$btnCrop = editor.ui.widgets.flip.element;
 		_windowSize = {
 			width: w.innerWidth || e.clientWidth || g.clientWidth,

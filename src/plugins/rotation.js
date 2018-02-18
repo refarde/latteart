@@ -1,16 +1,14 @@
 function RotationPlugin( editor ) {
 	console.log( editor.id + ": rotation" );
 
-	var $ = editor.$,
-		_$btnRotate, _dummyCanvas, _dummyCtx,
+	var _$btnRotate, _dummyCanvas, _dummyCtx,
 		_canvas, _ctx;
 
 	function init() {
-		_dummyCanvas = $( "<canvas />" )[ 0 ];
-		_dummyCtx = _dummyCanvas.getContext( "2d" );
-
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
+		_dummyCanvas = editor.dummyCanvas;
+		_dummyCtx = editor.dummyContext2d;
 		_$btnRotate = editor.ui.widgets.rotation.element;
 
 		_$btnRotate.on( "click", function() {
@@ -32,7 +30,7 @@ function RotationPlugin( editor ) {
 		} );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = RotationPlugin;

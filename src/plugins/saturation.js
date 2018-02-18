@@ -1,15 +1,14 @@
 function SaturationPlugin( editor ) {
 	console.log( editor.id + ": Saturation" );
 
-	var $ = editor.$,
-		_ctx, _canvas, _dummyCanvas, _dummyCtx,
+	var _ctx, _canvas, _dummyCanvas, _dummyCtx,
 		_$btnSaturation, _ui;
 
 	function init() {
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
-		_dummyCanvas = $( "<canvas />" )[ 0 ];
-		_dummyCtx = _dummyCanvas.getContext( "2d" );
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
+		_dummyCanvas = editor.dummyCanvas;
+		_dummyCtx = editor.dummyContext2d;
 
 		_ui = editor.ui;
 		_$btnSaturation = editor.ui.widgets.saturation.element;
@@ -29,6 +28,7 @@ function SaturationPlugin( editor ) {
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setSaturation( ui.value );
 					editor.info.saturation = ui.value;
+					editor.history.push();
 				} );
 
 			_ui.toggleRangebar( true );
@@ -64,7 +64,7 @@ function SaturationPlugin( editor ) {
 		_ctx.putImageData( pixels, 0, 0 );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 function _RGBToHSL( r, g, b ) {

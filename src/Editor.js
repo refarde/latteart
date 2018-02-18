@@ -11,7 +11,10 @@ function Editor( id, editorManager ) {
 	self.language = null;
 	self.finalTasks = [];
 	self.ui = null;
+	self.canvas = null;
 	self.context2d = null;
+	self.dummyCanvas = null;
+	self.dummyContext2d = null;
 	self.info = {};
 }
 
@@ -37,9 +40,9 @@ Editor.prototype = {
 				self.editorManager.destroy( self );
 			} )
 			.one( "uicreate", function() {
-				self.off( "uicreatefail" );
-				self._init();
+				self.off( "uireatefail" );
 				self.trigger( "editorcreate" );
+				self._init();
 			} );
 
 		ui.create( {
@@ -53,14 +56,26 @@ Editor.prototype = {
 	},
 
 	_init: function() {
-		var self = this;
+		var self = this,
+			canvas = self.ui.getCanvas();
+
+		self.canvas = canvas;
+		self.context2d = canvas.getContext( "2d" );
+		self.dummyCanvas = self.$( "<canvas />" )[ 0 ];
+		self.dummyContext2d = self.dummyCanvas.getContext( "2d" );
 
 		self.trigger( "editorinit" );
 	},
 
 	_final: function() {
-		var task,
-			finalTasks = this.finalTasks;
+		var self = this,
+			finalTasks = this.finalTasks,
+			task;
+
+		self.dummyCanvas = null;
+		self.dummyContext2d = null;
+		self.context2d = null;
+		self.canvas = null;
 
 		while ( finalTasks && finalTasks.length ) {
 			task = finalTasks.pop();
@@ -78,7 +93,7 @@ Editor.prototype = {
 	 *
 	 * !주:
 	 *  에디터 인스턴스는 editorManager에서 계속 관리되지 때문에 해당 메소드로는 삭제되지 않음.
-	 *  latteart.destroy( id )를 이용해야 더 효과적인 삭제 가능.
+	 *  latte.destroy( id )를 이용해야 더 효과적인 삭제 가능.
 	 */
 	destroy: function() {
 		var self = this;
@@ -86,7 +101,6 @@ Editor.prototype = {
 		self._final();
 
 		self.info = null;
-		self.context2d = null;
 		self.history = null;
 		self.ui = null;
 		self.finalTasks = null;
@@ -128,25 +142,6 @@ Editor.prototype = {
 
 	getContent: function( args ) {
 		console.log( args );
-	},
-
-	getCanvas: function() {
-		return this.ui.getCanvas();
-	},
-
-	getContext: function() {
-		var self = this,
-			canvas;
-
-		if ( !self.context2d ) {
-			canvas = self.ui.getCanvas();
-
-			if ( canvas ) {
-				self.context2d = canvas.getContext( "2d" );
-			}
-		}
-
-		return self.context2d;
 	},
 
 	addFinalTask: function( task ) {

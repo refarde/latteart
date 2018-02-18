@@ -1,15 +1,14 @@
 function ContrastPlugin( editor ) {
 	console.log( editor.id + ": Contrast" );
 
-	var $ = editor.$,
-		_ctx, _canvas, _dummyCanvas, _dummyCtx,
+	var _ctx, _canvas, _dummyCanvas, _dummyCtx,
 		_$btnContrast, _ui;
 
 	function init() {
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
-		_dummyCanvas = $( "<canvas />" )[ 0 ];
-		_dummyCtx = _dummyCanvas.getContext( "2d" );
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
+		_dummyCanvas = editor.dummyCanvas;
+		_dummyCtx = editor.dummyContext2d;
 
 		_ui = editor.ui;
 		_$btnContrast = editor.ui.widgets.contrast.element;
@@ -29,6 +28,7 @@ function ContrastPlugin( editor ) {
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setContrast( ui.value );
 					editor.info.contrast = ui.value;
+					editor.history.push();
 				} );
 
 			_ui.toggleRangebar( true );
@@ -54,7 +54,7 @@ function ContrastPlugin( editor ) {
 		_ctx.putImageData( pixels, 0, 0 );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = ContrastPlugin;

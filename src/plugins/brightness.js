@@ -1,15 +1,14 @@
 function BrightnessPlugin( editor ) {
 	console.log( editor.id + ": Brightness" );
 
-	var $ = editor.$,
-		_ctx, _canvas, _dummyCanvas, _dummyCtx,
+	var _ctx, _canvas, _dummyCanvas, _dummyCtx,
 		_$btnBrightness, _ui;
 
 	function init() {
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
-		_dummyCanvas = $( "<canvas />" )[ 0 ];
-		_dummyCtx = _dummyCanvas.getContext( "2d" );
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
+		_dummyCanvas = editor.dummyCanvas;
+		_dummyCtx = editor.dummyContext2d;
 
 		_ui = editor.ui;
 		_$btnBrightness = editor.ui.widgets.brightness.element;
@@ -29,6 +28,7 @@ function BrightnessPlugin( editor ) {
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setBrightness( ui.value );
 					editor.info.brightness = ui.value;
+					editor.history.push();
 				} );
 
 			_ui.toggleRangebar( true );
@@ -54,7 +54,7 @@ function BrightnessPlugin( editor ) {
 		_ctx.putImageData( pixels, 0, 0 );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = BrightnessPlugin;

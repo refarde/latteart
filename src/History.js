@@ -20,26 +20,28 @@ History.prototype = {
 
 	_getData: function() {
 		var editor = this.editor,
-			canvas = editor.getCanvas(),
+			canvas = editor.canvas,
 			width = canvas.width,
 			height = canvas.height;
 
 		return {
 			imgData: canvas.toDataURL(),
 			width: width,
-			height: height
+			height: height,
+			info: editor.info
 		};
 	},
 
 	_setData: function( item ) {
 		var self = this,
 			editor = self.editor,
-			canvas = editor.getCanvas(),
-			ctx = editor.getContext(),
+			canvas = editor.canvas,
+			ctx = editor.context2d,
 			img, width, height;
 
 		canvas.width = item.width;
 		canvas.height = item.height;
+		canvas.info = item.info;
 
 		img = new window.Image();
 		img.onload = function() {

@@ -22,7 +22,7 @@ function UndoPlugin( editor ) {
 		} );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = UndoPlugin;

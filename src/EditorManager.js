@@ -185,4 +185,4 @@ var document = window.document,
 		}
 	};
 
-window.latteart = EditorManager;
+window.latte = EditorManager;

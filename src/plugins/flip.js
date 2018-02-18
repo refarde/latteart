@@ -1,16 +1,15 @@
 function FlipPlugin( editor ) {
 	console.log( editor.id + ": flip" );
 
-	var $ = editor.$,
-		_$btnFlip, _dummyCanvas, _dummyCtx,
+	var _$btnFlip, _dummyCanvas, _dummyCtx,
 		_canvas, _ctx;
 
 	function init() {
-		_dummyCanvas = $( "<canvas />" )[ 0 ];
-		_dummyCtx = _dummyCanvas.getContext( "2d" );
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
+		_dummyCanvas = editor.dummyCanvas;
+		_dummyCtx = editor.dummyContext2d;
 
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
 		_$btnFlip = editor.ui.widgets.flip.element;
 
 		_$btnFlip.on( "click", function() {
@@ -29,7 +28,7 @@ function FlipPlugin( editor ) {
 		} );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = FlipPlugin;

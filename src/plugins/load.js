@@ -28,8 +28,8 @@ function LoadPlugin( editor ) {
 					img.src = window.URL.createObjectURL( e.target.files[ 0 ] );
 				} );
 
-		_canvas = editor.getCanvas();
-		_ctx = editor.getContext();
+		_canvas = editor.canvas;
+		_ctx = editor.context2d;
 		_$btnLoad = editor.ui.widgets.load.element;
 
 		_$btnLoad.on( "click", function() {
@@ -37,7 +37,7 @@ function LoadPlugin( editor ) {
 		} );
 	}
 
-	editor.on( "editorcreate", init );
+	editor.on( "editorinit", init );
 }
 
 module.exports = LoadPlugin;

@@ -9,14 +9,19 @@ var document = window.document,
 		"save",
 		"undo",
 		"redo",
+		"filter",
 		"rotation",
 		"flip",
 		"brightness",
 		"contrast",
 		"saturation"
 	],
+	_filterList = [
+		"grayscale"
+	],
 	_loadedConfigs = {},
 	_loadedPlugins = {},
+	_loadedFilters = {},
 
 	EditorManager = {
 		$: $,
@@ -60,6 +65,20 @@ var document = window.document,
 
 					if ( !_loadedPlugins[ pluginName ] ) {
 						_loadedPlugins[ pluginName ] = require( "./plugins/" + pluginName + ".js"  );
+					}
+				}
+			}
+
+			function loadFilters() {
+				var i, listLength, filterName;
+
+				listLength = _filterList.length;
+
+				for ( i = 0; i < listLength; i++ ) {
+					filterName = _filterList[ i ];
+
+					if ( !_loadedFilters[ filterName ] ) {
+						_loadedFilters[ filterName ] = require( "./filters/" + filterName + ".js"  );
 					}
 				}
 			}
@@ -113,6 +132,7 @@ var document = window.document,
 					loadConfigs( configs, type );
 
 			loadPlugins();
+			loadFilters();
 
 			require( "./skins/default.less" );
 
@@ -122,7 +142,8 @@ var document = window.document,
 				self.activeEditor = editor;
 				editor.create( {
 					configs: configs,
-					plugins: _loadedPlugins
+					plugins: _loadedPlugins,
+					filters: _loadedFilters
 				} );
 
 				if ( typeof callback === "function" ) {

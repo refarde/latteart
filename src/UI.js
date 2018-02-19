@@ -55,7 +55,8 @@ UI.prototype = {
 				left: [ "undo", "redo" ],
 				right: [ "load", "save" ]
 			},
-			toolbar: [ "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ]
+			toolbar: [ "filter", "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ],
+			filter: [ "grayscale" ]
 		}, data.configs );
 
 		self._createContainer( uiData );
@@ -150,15 +151,20 @@ UI.prototype = {
 		var self = this,
 			$ = self.$,
 			configs = uiData.configs || {},
+			toolbarConfig = configs.toolbar,
 			toolbar = $.lui.container(),
 			toolbarData = toolbar.getHTMLData();
 
-		if ( configs.toolbar === false ) {
+		if ( toolbarConfig === false ) {
 			return;
 		}
 
 		self._createMainbar( uiData, toolbarData );
 		self._createRangebar( uiData, toolbarData );
+
+		if ( $.inArray( "filter", toolbarConfig ) !== -1 ) {
+			self._createFilterbar( uiData, toolbarData );
+		}
 
 		toolbarData.attr.className.push( "lui-area", "lui-bar", "lui-toolbar" );
 		uiData.htmlData.contents.push( toolbarData );
@@ -225,6 +231,57 @@ UI.prototype = {
 		uiData.widgets.rangebar = rangebar;
 	},
 
+	_createFilterbar: function( uiData, toolbarData ) {
+		var $ = this.$,
+			configs = uiData.configs || {},
+			filterbar = $.lui.container(),
+			filterbarData = filterbar.getHTMLData(),
+			filterConfigs = configs.filter,
+			backButton, backButtonData,
+			backButtonWrap, backButtonWrapData,
+			filtersWrap, filtersWrapData, filterConfig,
+			control, controlData, i, length;
+
+		backButtonWrap = $.lui.container();
+		backButtonWrapData = backButtonWrap.getHTMLData();
+		backButton = $.lui.button( {
+			label: "back",
+			icons: {
+				primary: "back"
+			}
+		} );
+		backButtonData = backButton.getHTMLData();
+		backButtonWrapData.attr.className.push( "lui-part-back" );
+		backButtonWrapData.contents.push( backButtonData );
+		filterbarData.contents.push( backButtonWrapData );
+		uiData.widgets.filterbarback = backButton;
+
+		filtersWrap = $.lui.container();
+		filtersWrapData = filtersWrap.getHTMLData();
+		length = filterConfigs.length;
+
+		for ( i = 0; i < length; i++ ) {
+			filterConfig = filterConfigs[ i ];
+			control = $.lui.button( {
+				label: filterConfig,
+				icons: {
+					primary: filterConfig
+				}
+			} );
+			controlData = control.getHTMLData();
+			filtersWrapData.contents.push( controlData );
+			uiData.widgets[ "filter_" + filterConfig ] = control;
+		}
+
+		filtersWrapData.attr.className.push( "lui-part-filter" );
+		filterbarData.contents.push( filtersWrapData );
+		uiData.widgets.filtersWrap = filtersWrap;
+
+		filterbarData.attr.className.push( "lui-filterbar" );
+		toolbarData.contents.push( filterbarData );
+		uiData.widgets.filterbar = filterbar;
+	},
+
 	_render: function( target, htmlData ) {
 		var self = this,
 			editor = self.editor,
@@ -281,6 +338,10 @@ UI.prototype = {
 
 		widgets.rangebarback.element.on( "click", function() {
 			self.toggleRangebar( false );
+		} );
+
+		widgets.filterbarback.element.on( "click", function() {
+			self.toggleFilterbar( false );
 		} );
 	},
 
@@ -360,6 +421,10 @@ UI.prototype = {
 		if ( !state ) {
 			sliderWidget.element.off( ".latte" );
 		}
+	},
+
+	toggleFilterbar: function( state ) {
+		this.widgets.toolbar.element.toggleClass( "lui-filterbar-visible", state );
 	}
 };
 

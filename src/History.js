@@ -39,8 +39,8 @@ History.prototype = {
 			ctx = editor.context2d,
 			img, width, height;
 
-		canvas.width = item.width;
-		canvas.height = item.height;
+		width = canvas.width = item.width;
+		height = canvas.height = item.height;
 		canvas.info = item.info;
 
 		img = new window.Image();

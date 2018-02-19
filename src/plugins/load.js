@@ -20,7 +20,7 @@ function LoadPlugin( editor ) {
 						editor.info = {
 							brightness: 0,
 							saturation: 0,
-							contrast: 0
+							contrast: 1
 						};
 						editor.ui.toggleRangebar( false );
 					};

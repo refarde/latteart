@@ -21,9 +21,10 @@ function ContrastPlugin( editor ) {
 
 			_ui.widgets.slider
 				.option( {
-					min: -100,
-					max: 100,
-					value: editor.info.contrast
+					min: 0,
+					max: 2,
+					value: editor.info.contrast,
+					step: 0.01
 				} )
 				.element.on( "sliderchange.latte", function( e, ui ) {
 					_setContrast( ui.value );
@@ -43,12 +44,12 @@ function ContrastPlugin( editor ) {
 		data = pixels.data;
 		length = data.length;
 
-		value = ( parseFloat( value ) || 1 );
+		value = ( parseFloat( value ) || 0 );
 
 		for ( i = 0; i < length; i += 4 ) {
-			data[ i ] = ( ( ( ( data[ i ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
-			data[ i + 1 ] = ( ( ( ( data[ i + 1 ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
-			data[ i + 2 ] = ( ( ( ( data[ i + 2 ] / 255 ) - 0.5 ) * value ) + 0.5 ) * 255;
+			data[ i ] = ( data[ i ] - 127 ) * value + 127;
+			data[ i + 1 ] = ( data[ i + 1 ] - 127 ) * value + 127;
+			data[ i + 2 ] = ( data[ i + 2 ] - 127 ) * value + 127;
 		}
 
 		_ctx.putImageData( pixels, 0, 0 );

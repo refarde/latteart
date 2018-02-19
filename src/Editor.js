@@ -9,6 +9,8 @@ function Editor( id, editorManager ) {
 	self.env = editorManager.env;
 	self.configs = null;
 	self.language = null;
+	self.history = null;
+	self.filters = null;
 	self.finalTasks = [];
 	self.ui = null;
 	self.canvas = null;
@@ -29,6 +31,7 @@ Editor.prototype = {
 		self.configs = configs = $.extend( { id: self.id }, loaded.configs );
 		self.language = configs.language || "ko_KR";
 		self.history = new History( self );
+		self.filters = loaded.filters || [];
 
 		for ( name in plugins ) {
 			plugins[ name ]( self );
@@ -101,6 +104,7 @@ Editor.prototype = {
 		self._final();
 
 		self.info = null;
+		self.filters = null;
 		self.history = null;
 		self.ui = null;
 		self.finalTasks = null;

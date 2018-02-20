@@ -2,6 +2,7 @@ var document = window.document,
 	$ = require( "./libs/jquery-custom.js" ),
 	env = require( "bowser" ),
 	Editor = require( "./Editor.js" ),
+	Filter = require( "./Filter.js" ),
 
 	_prepared = false,
 	_pluginList = [
@@ -16,12 +17,12 @@ var document = window.document,
 		"contrast",
 		"saturation"
 	],
-	_filterList = [
+	_userFilterList = [
 		"grayscale"
 	],
 	_loadedConfigs = {},
 	_loadedPlugins = {},
-	_loadedFilters = {},
+	_loadedUserFilters = {},
 
 	EditorManager = {
 		$: $,
@@ -29,6 +30,7 @@ var document = window.document,
 		editors: {},
 		version: "@@EDITOR_VERSION@@",
 		edition: "@@EDITOR_EDITION@@",
+		filter: Filter,
 
 		create: function( id, configs, type, callback ) {
 			var self = this,
@@ -64,21 +66,27 @@ var document = window.document,
 					pluginName = _pluginList[ i ];
 
 					if ( !_loadedPlugins[ pluginName ] ) {
-						_loadedPlugins[ pluginName ] = require( "./plugins/" + pluginName + ".js"  );
+						_loadedPlugins[ pluginName ] =
+							require(
+								"./plugins/" +
+								pluginName.charAt( 0 ).toUpperCase() +
+								pluginName.slice( 1 ).toLowerCase() +
+								"Plugin" + ".js"
+							);
 					}
 				}
 			}
 
-			function loadFilters() {
+			function loadUserFilters() {
 				var i, listLength, filterName;
 
-				listLength = _filterList.length;
+				listLength = _userFilterList.length;
 
 				for ( i = 0; i < listLength; i++ ) {
-					filterName = _filterList[ i ];
+					filterName = _userFilterList[ i ];
 
-					if ( !_loadedFilters[ filterName ] ) {
-						_loadedFilters[ filterName ] = require( "./filters/" + filterName + ".js"  );
+					if ( !_loadedUserFilters[ filterName ] ) {
+						_loadedUserFilters[ filterName ] = require( "./filters/" + filterName + ".js"  );
 					}
 				}
 			}
@@ -132,7 +140,7 @@ var document = window.document,
 					loadConfigs( configs, type );
 
 			loadPlugins();
-			loadFilters();
+			loadUserFilters();
 
 			require( "./skins/default.less" );
 
@@ -143,7 +151,7 @@ var document = window.document,
 				editor.create( {
 					configs: configs,
 					plugins: _loadedPlugins,
-					filters: _loadedFilters
+					userFilters: _loadedUserFilters
 				} );
 
 				if ( typeof callback === "function" ) {

@@ -7,10 +7,11 @@ function Editor( id, editorManager ) {
 	self.id = id;
 	self.$ = editorManager.$;
 	self.env = editorManager.env;
+	self.filter = editorManager.filter;
 	self.configs = null;
 	self.language = null;
 	self.history = null;
-	self.filters = null;
+	self.userFilters = null;
 	self.finalTasks = [];
 	self.ui = null;
 	self.canvas = null;
@@ -31,7 +32,7 @@ Editor.prototype = {
 		self.configs = configs = $.extend( { id: self.id }, loaded.configs );
 		self.language = configs.language || "ko_KR";
 		self.history = new History( self );
-		self.filters = loaded.filters || [];
+		self.userFilters = loaded.userFilters || [];
 
 		for ( name in plugins ) {
 			plugins[ name ]( self );
@@ -104,7 +105,7 @@ Editor.prototype = {
 		self._final();
 
 		self.info = null;
-		self.filters = null;
+		self.userFilters = null;
 		self.history = null;
 		self.ui = null;
 		self.finalTasks = null;
@@ -113,6 +114,8 @@ Editor.prototype = {
 		self.id = null;
 		self.language = null;
 		self.configs = null;
+		self.filter = null;
+		self.env = null;
 		self.$ = null;
 	},
 

@@ -5,7 +5,7 @@ function FilterPlugin( editor ) {
 
 	function init() {
 		var // configs = editor.configs,
-			loadedFilters = editor.filters,
+			loadedUserFilters = editor.userFilters,
 			name;
 
 		// if ( !configs || !configs.filter ) {
@@ -15,13 +15,13 @@ function FilterPlugin( editor ) {
 		_$btnFilter = editor.ui.widgets.filter.element;
 		_ui = editor.ui;
 
-		for ( name in loadedFilters ) {
+		for ( name in loadedUserFilters ) {
 
 			// if ( configs.filter.indexOf( name ) === -1 ) {
 			// 	continue;
 			// }
 
-			loadedFilters[ name ]( editor );
+			loadedUserFilters[ name ]( editor );
 		}
 
 		_$btnFilter.on( "click", function() {

@@ -1,8 +1,8 @@
-function BrightnessPlugin( editor ) {
-	console.log( editor.id + ": Brightness" );
+function ContrastPlugin( editor ) {
+	console.log( editor.id + ": Contrast" );
 
 	var _ctx, _canvas, _dummyCanvas, _dummyCtx,
-		_$btnBrightness, _ui;
+		_$btnContrast, _ui;
 
 	function init() {
 		_canvas = editor.canvas;
@@ -11,8 +11,8 @@ function BrightnessPlugin( editor ) {
 		_dummyCtx = editor.dummyContext2d;
 
 		_ui = editor.ui;
-		_$btnBrightness = editor.ui.widgets.brightness.element;
-		_$btnBrightness.on( "click", function() {
+		_$btnContrast = editor.ui.widgets.contrast.element;
+		_$btnContrast.on( "click", function() {
 			_dummyCanvas.width = _canvas.width;
 			_dummyCanvas.height = _canvas.height;
 
@@ -23,11 +23,11 @@ function BrightnessPlugin( editor ) {
 				.option( {
 					min: -100,
 					max: 100,
-					value: editor.info.brightness
+					value: editor.info.contrast
 				} )
 				.element.on( "sliderchange.latte", function( e, ui ) {
-					_setBrightness( ui.value );
-					editor.info.brightness = ui.value;
+					_setContrast( ui.value );
+					editor.info.contrast = ui.value;
 					editor.history.push();
 				} );
 
@@ -35,26 +35,16 @@ function BrightnessPlugin( editor ) {
 		} );
 	}
 
-	function _setBrightness( value ) {
-		var pixels, data, length, i;
+	function _setContrast( value ) {
+		var pixels;
 
 		_ctx.drawImage( _dummyCanvas, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 		pixels = _ctx.getImageData( 0, 0, _canvas.width, _canvas.height );
-		data = pixels.data;
-		length = data.length;
-
-		value = parseFloat( value ) || 0;
-
-		for ( i = 0; i < length; i += 4 ) {
-			data[ i ] += value;
-			data[ i + 1 ] += value;
-			data[ i + 2 ] += value;
-		}
-
+		editor.filter.contrast( pixels.data, value );
 		_ctx.putImageData( pixels, 0, 0 );
 	}
 
 	editor.on( "editorinit", init );
 }
 
-module.exports = BrightnessPlugin;
+module.exports = ContrastPlugin;

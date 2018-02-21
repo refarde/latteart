@@ -40,7 +40,7 @@ function ContrastPlugin( editor ) {
 
 		_ctx.drawImage( _dummyCanvas, 0, 0, _dummyCanvas.width, _dummyCanvas.height );
 		pixels = _ctx.getImageData( 0, 0, _canvas.width, _canvas.height );
-		editor.filter.contrast( pixels.data, value );
+		editor.filters.contrast( pixels.data, value );
 		_ctx.putImageData( pixels, 0, 0 );
 	}
 

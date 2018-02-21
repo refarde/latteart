@@ -2,7 +2,7 @@ var document = window.document,
 	$ = require( "./libs/jquery-custom.js" ),
 	env = require( "bowser" ),
 	Editor = require( "./Editor.js" ),
-	Filter = require( "./Filter.js" ),
+	Filters = require( "./Filters.js" ),
 
 	_prepared = false,
 	_pluginList = [
@@ -18,7 +18,8 @@ var document = window.document,
 		"saturation"
 	],
 	_userFilterList = [
-		"grayscale"
+		"grayscale",
+		"vintage"
 	],
 	_loadedConfigs = {},
 	_loadedPlugins = {},
@@ -30,7 +31,7 @@ var document = window.document,
 		editors: {},
 		version: "@@EDITOR_VERSION@@",
 		edition: "@@EDITOR_EDITION@@",
-		filter: Filter,
+		filters: Filters,
 
 		create: function( id, configs, type, callback ) {
 			var self = this,

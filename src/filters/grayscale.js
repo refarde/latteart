@@ -6,7 +6,7 @@ function GrayScaleFilter( editor ) {
 			ctx = editor.context2d,
 			pixels = ctx.getImageData( 0, 0, canvas.width, canvas.height );
 
-		editor.filter.grayscale( pixels.data );
+		editor.filters.grayscale( pixels.data );
 		ctx.putImageData( pixels, 0, 0 );
 		editor.history.push();
 	}

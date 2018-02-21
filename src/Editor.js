@@ -7,7 +7,7 @@ function Editor( id, editorManager ) {
 	self.id = id;
 	self.$ = editorManager.$;
 	self.env = editorManager.env;
-	self.filter = editorManager.filter;
+	self.filters = editorManager.filters;
 	self.configs = null;
 	self.language = null;
 	self.history = null;
@@ -114,7 +114,7 @@ Editor.prototype = {
 		self.id = null;
 		self.language = null;
 		self.configs = null;
-		self.filter = null;
+		self.filters = null;
 		self.env = null;
 		self.$ = null;
 	},

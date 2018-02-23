@@ -58,7 +58,7 @@ var	mathMin = Math.min,
 			endX = controlPoints[ controlPoints.length - 1 ][ 0 ];
 			bezier = Operations.missingValues( bezier, endX );
 
-			if ( bezier[ endX ] === null ) {
+			if ( !bezier[ endX ] ) {
 				bezier[ endX ] = bezier[ endX - 1 ];
 			}
 
@@ -68,7 +68,7 @@ var	mathMin = Math.min,
 		missingValues: function( values, endX ) {
 			var i, j, leftCoord, ret, rightCoord, _i, _j;
 
-			if ( Object.keys( values ).length > endX + 1 ) {
+			if ( Object.keys( values ).length >= endX + 1 ) {
 				return values;
 			}
 

@@ -5,15 +5,24 @@ var Operations = require( "./utils/Operations.js" ),
 	mathPow = Math.pow,
 	mathSqrt = Math.sqrt,
 	mathAbs = Math.abs,
+	clampRGB = function( channel ) {
+		if ( channel < 0 ) {
+			return 0;
+		}
+		if ( channel > 255 ) {
+			return 255;
+		}
+		return channel;
+	},
 
 	Filters = {
 		brightness: function( data, value ) {
 			var i, length = data.length;
 
 			for ( i = 0; i < length; i += 4 ) {
-				data[ i ] += value;
-				data[ i + 1 ] += value;
-				data[ i + 2 ] += value;
+				data[ i ] += clampRGB( value );
+				data[ i + 1 ] += clampRGB( value );
+				data[ i + 2 ] += clampRGB( value );
 			}
 		},
 
@@ -33,7 +42,7 @@ var Operations = require( "./utils/Operations.js" ),
 						channel -= channel * mathAbs( value );
 					}
 
-					return channel;
+					return clampRGB( channel );
 				};
 
 			if ( typeof values !== "object" ) {
@@ -58,12 +67,20 @@ var Operations = require( "./utils/Operations.js" ),
 
 		contrast: function( data, value ) {
 			var i,
-				length = data.length;
+				length = data.length,
+				calculate = function( channel ) {
+					channel /= 255;
+					channel -= 0.5;
+					channel *= value;
+					channel += 0.5;
+					channel *= 255;
+					return clampRGB( channel );
+				};
 
 			for ( i = 0; i < length; i += 4 ) {
-				data[ i ] = ( data[ i ] - 127 ) * value + 127;
-				data[ i + 1 ] = ( data[ i + 1 ] - 127 ) * value + 127;
-				data[ i + 2 ] = ( data[ i + 2 ] - 127 ) * value + 127;
+				data[ i ] = calculate( data[ i ] );
+				data[ i + 1 ] = calculate( data[ i + 1 ] );
+				data[ i + 2 ] = calculate( data[ i + 2 ] );
 			}
 		},
 
@@ -71,7 +88,7 @@ var Operations = require( "./utils/Operations.js" ),
 			var i,
 				length = data.length,
 				calculate = function( channel ) {
-					return mathPow( channel / 255, value ) * 255;
+					return clampRGB( mathPow( channel / 255, value ) * 255 );
 				};
 
 			for ( i = 0; i < length; i += 4 ) {
@@ -86,7 +103,7 @@ var Operations = require( "./utils/Operations.js" ),
 				length = data.length;
 
 			for ( i = 0; i < length; i += 4 ) {
-				brightness = 0.34 * data[ i ] + 0.5 * data[ i + 1 ] + 0.16 * data[ i + 2 ];
+				brightness = clampRGB( 0.299 * data[ i ] + 0.587 * data[ i + 1 ] + 0.114 * data[ i + 2 ] );
 				data[ i ] = brightness;
 				data[ i + 1 ] = brightness;
 				data[ i + 2 ] = brightness;
@@ -104,15 +121,18 @@ var Operations = require( "./utils/Operations.js" ),
 
 			for ( i = 0; i < length; i += 4 ) {
 				rand = randomRange( value * -1, value );
-				data[ i ] += rand;
-				data[ i + 1 ] += rand;
-				data[ i + 2 ] += rand;
+				data[ i ] = clampRGB( data[ i ] + rand );
+				data[ i + 1 ] = clampRGB( data[ i + 1 ] + rand );
+				data[ i + 2 ] = clampRGB( data[ i + 2 ] + rand );
 			}
 		},
 
 		saturation: function( data, value ) {
 			var i, max, r, g, b,
-				length = data.length;
+				length = data.length,
+				calculate = function( channel, max ) {
+					return clampRGB( channel + ( max - channel ) * value );
+				};
 
 			value *= -0.01;
 
@@ -124,15 +144,15 @@ var Operations = require( "./utils/Operations.js" ),
 				max = mathMax( r, g, b );
 
 				if ( r !== max ) {
-					data[ i ] += ( max - r ) * value;
+					data[ i ] = calculate( r, max );
 				}
 
 				if ( g !== max ) {
-					data[ i + 1 ] += ( max - g ) * value;
+					data[ i + 1 ] = calculate( g, max );
 				}
 
 				if ( b !== max ) {
-					data[ i + 2 ] += ( max - b ) * value;
+					data[ i + 2 ] = calculate( b, max );
 				}
 			}
 		},
@@ -140,8 +160,8 @@ var Operations = require( "./utils/Operations.js" ),
 		sepia: function( data, value ) {
 			var i, r, g, b,
 				length = data.length,
-				calculate = function( rAlpha, gAlpha, bAlpha ) {
-					return mathMin( 255, r * rAlpha + g * gAlpha + b * bAlpha );
+				calculate = function( r, rAlpha, g, gAlpha, b, bAlpha ) {
+					return clampRGB( mathMin( 255, r * rAlpha + g * gAlpha + b * bAlpha ) );
 				};
 
 			value = ( value || 100 ) / 100;
@@ -151,15 +171,18 @@ var Operations = require( "./utils/Operations.js" ),
 				g = data[ i + 1 ];
 				b = data[ i + 2 ];
 
-				data[ i ] = calculate( 1 - ( 0.607 * value ), 0.769 * value, 0.189 * value );
-				data[ i + 1 ] = calculate( 0.349 * value, 1 - ( 0.314 * value ), 0.168 *  value );
-				data[ i + 2 ] = calculate( 0.272 * value, 0.534 * value, 1 - ( 0.869 * value ) );
+				data[ i ] = calculate( r, 1 - ( 0.607 * value ), g, 0.769 * value, b, 0.189 * value );
+				data[ i + 1 ] = calculate( r, 0.349 * value, g, 1 - ( 0.314 * value ), b, 0.168 *  value );
+				data[ i + 2 ] = calculate( r, 0.272 * value, g, 0.534 * value, b, 1 - ( 0.869 * value ) );
 			}
 		},
 
 		vibrance: function( data, value ) {
 			var i, amt, avg, max, r, g, b,
-				length = data.length;
+				length = data.length,
+				calculate = function( channel, max, amt ) {
+					return clampRGB( channel + ( max - channel ) * amt );
+				};
 
 			value *= -0.01;
 
@@ -173,15 +196,15 @@ var Operations = require( "./utils/Operations.js" ),
 				amt = ( ( mathAbs( max - avg ) * 2 / 255 ) * value ) / 100;
 
 				if ( r !== max ) {
-					data[ i ] += ( max - r ) * amt;
+					data[ i ] = calculate( r, max, amt );
 				}
 
 				if ( g !== max ) {
-					data[ i + 1 ] += ( max - g ) * amt;
+					data[ i + 1 ] = calculate( g, max, amt );
 				}
 
 				if ( b !== max ) {
-					data[ i + 2 ] += ( max - b ) * amt;
+					data[ i + 2 ] = calculate( b, max, amt );
 				}
 			}
 		},
@@ -193,12 +216,10 @@ var Operations = require( "./utils/Operations.js" ),
 				y = 0,
 				length = data.length,
 				calculate = function( channel, div ) {
-					return mathPow( channel / 255, div ) * 255;
+					return clampRGB( mathPow( channel / 255, div ) * 255 );
 				};
 
-			if ( strength === undefined ) {
-				strength = 60;
-			}
+			strength = strength || 60;
 
 			if ( typeof size === "string" && size.substr( -1 ) === "%" ) {
 				size = parseInt( size.substr( 0, size.length - 1 ), 10 ) / 100;
@@ -223,9 +244,7 @@ var Operations = require( "./utils/Operations.js" ),
 				data[ i + 1 ] = calculate( data[ i + 1 ], div );
 				data[ i + 2 ] = calculate( data[ i + 2 ], div );
 
-				x++;
-
-				if ( x > width ) {
+				if ( ++x > width ) {
 					x %= width;
 					y++;
 				}
@@ -246,6 +265,19 @@ var Operations = require( "./utils/Operations.js" ),
 			} );
 			self.gamma( data, 0.87 );
 			self.vignette( data, width, height, "40%", 30 );
+		},
+
+
+		lomo: function( data, width, height ) {
+			var self = this;
+
+			self.brightness( data, 15 );
+			self.exposure( data, 15 );
+			self.curves( data, "rgb", [ 0, 0 ], [ 200, 0 ], [ 155, 255 ], [ 255, 255 ] );
+			self.saturation( data, -20 );
+			self.gamma( data, 1.8 );
+			self.vignette( data, width, height, "50%", 60 );
+			self.brightness( data, 5 );
 		}
 	};
 

@@ -19,10 +19,12 @@ var Operations = require( "./utils/Operations.js" ),
 		brightness: function( data, value ) {
 			var i, length = data.length;
 
+			value = Math.floor( 255 * ( ( value || 0 ) / 100 ) );
+
 			for ( i = 0; i < length; i += 4 ) {
-				data[ i ] += clampRGB( value );
-				data[ i + 1 ] += clampRGB( value );
-				data[ i + 2 ] += clampRGB( value );
+				data[ i ] = clampRGB( data[ i ] + value );
+				data[ i + 1 ] = clampRGB( data[ i + 1 ] + value );
+				data[ i + 2 ] = clampRGB( data[ i + 2 ] + value );
 			}
 		},
 
@@ -68,7 +70,7 @@ var Operations = require( "./utils/Operations.js" ),
 		contrast: function( data, value ) {
 			var i,
 				length = data.length,
-				calculate = function( channel ) {
+				calculate = function( channel, value ) {
 					channel /= 255;
 					channel -= 0.5;
 					channel *= value;
@@ -77,10 +79,13 @@ var Operations = require( "./utils/Operations.js" ),
 					return clampRGB( channel );
 				};
 
+			value = parseFloat( value || 0 );
+			value = mathPow( ( value + 100 ) / 100, 2 );
+
 			for ( i = 0; i < length; i += 4 ) {
-				data[ i ] = calculate( data[ i ] );
-				data[ i + 1 ] = calculate( data[ i + 1 ] );
-				data[ i + 2 ] = calculate( data[ i + 2 ] );
+				data[ i ] = calculate( data[ i ], value );
+				data[ i + 1 ] = calculate( data[ i + 1 ], value );
+				data[ i + 2 ] = calculate( data[ i + 2 ], value );
 			}
 		},
 
@@ -235,20 +240,19 @@ var Operations = require( "./utils/Operations.js" ),
 			for ( i = 0; i < length; i += 4 ) {
 				dist = Operations.distance( x, y, center[ 0 ], center[ 1 ] );
 
-				if ( dist <= end ) {
-					continue;
+				if ( dist > end ) {
+					div = Math.max( 1, ( bezier[ Math.round( ( ( dist - end ) / size ) * 100 ) ] / 10 ) * strength );
+					data[ i ] = calculate( data[ i ], div );
+					data[ i + 1 ] = calculate( data[ i + 1 ], div );
+					data[ i + 2 ] = calculate( data[ i + 2 ], div );
 				}
 
-				div = Math.max( 1, ( bezier[ Math.round( ( ( dist - end ) / size ) * 100 ) ] / 10 ) * strength );
-				data[ i ] = calculate( data[ i ], div );
-				data[ i + 1 ] = calculate( data[ i + 1 ], div );
-				data[ i + 2 ] = calculate( data[ i + 2 ], div );
-
-				if ( ++x > width ) {
-					x %= width;
-					y++;
+				if ( ++x >= width ) {
+					x = 0;
+					++y;
 				}
 			}
+			console.log( y );
 		},
 
 		vintage: function( data, width, height ) {

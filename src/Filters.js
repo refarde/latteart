@@ -89,6 +89,82 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 		},
 
+		curves: function( data, extra ) {
+			var algorithm, channels, bezier, start, end, ctrl1, ctrl2,
+				i, _i, _j, _ref, _ref1,
+				length = data.length;
+
+			extra = extra || {};
+
+			algorithm = extra.algorithm;
+			if ( typeof algorithm === "string" ) {
+				algorithm = Operations[ algorithm ];
+			} else if ( typeof algorithm !== "function" ) {
+				algorithm = Operations.bezier;
+			}
+
+			channels = extra.channels || [ "r", "g", "b" ];
+			if ( channels[ 0 ] === "v" ) {
+				channels = [ "r", "g", "b" ];
+			}
+
+			start = extra.start;
+			ctrl1 = extra.ctrl1;
+			ctrl2 = extra.ctrl2;
+			end = extra.end;
+
+			if ( !start || !end ) {
+				throw "Invalid number of arguments to curves filter";
+			}
+
+			bezier = algorithm( start, ctrl1, ctrl2, end, 0, 255 );
+
+			if ( start[ 0 ] > 0 ) {
+				for (
+					i = _i = 0, _ref = start[ 0 ];
+					0 <= _ref ? _i < _ref : _i > _ref;
+					i = 0 <= _ref ? ++_i : --_i
+				) {
+					bezier[ i ] = start[ 1 ];
+				}
+			}
+
+			if ( end[ 0 ] < 255 ) {
+				for (
+					i = _j = _ref1 = end[ 0 ];
+					_ref1 <= 255 ? _j <= 255 : _j >= 255;
+					i = _ref1 <= 255 ? ++_j : --_j
+				) {
+					bezier[ i ] = end[ 1 ];
+				}
+			}
+
+			for ( i = 0; i < length; i += 4 ) {
+				data[ i ] = clampRGB( bezier[ i ] );
+				data[ i + 1 ] = clampRGB( data[ i + 1 ] );
+				data[ i + 2 ] = clampRGB( data[ i + 2 ] );
+			}
+		},
+
+		exposure: function( data, value ) {
+			var p = Math.abs( value || 0 ) / 100 * 255,
+				ctrl1 = [ 0, p ],
+				ctrl2 = [ 255 - p, 255 ];
+
+			if ( value < 0 ) {
+				ctrl1 = ctrl1.reverse();
+				ctrl2 = ctrl2.reverse();
+			}
+
+			return this.curves( data, {
+				channels: [ "r", "g", "b" ],
+				start: [ 0, 0 ],
+				ctrl1: ctrl1,
+				ctrl2: ctrl2,
+				end: [ 255, 255 ]
+			} );
+		},
+
 		gamma: function( data, value ) {
 			var i,
 				length = data.length,
@@ -252,7 +328,6 @@ var Operations = require( "./utils/Operations.js" ),
 					++y;
 				}
 			}
-			console.log( y );
 		},
 
 		vintage: function( data, width, height ) {
@@ -271,13 +346,18 @@ var Operations = require( "./utils/Operations.js" ),
 			self.vignette( data, width, height, "40%", 30 );
 		},
 
-
 		lomo: function( data, width, height ) {
 			var self = this;
 
 			self.brightness( data, 15 );
 			self.exposure( data, 15 );
-			self.curves( data, "rgb", [ 0, 0 ], [ 200, 0 ], [ 155, 255 ], [ 255, 255 ] );
+			self.curves( data, {
+				channels: [ "r", "g", "b" ],
+				start: [ 0, 0 ],
+				ctrl1: [ 200, 0 ],
+				ctrl2: [ 155, 255 ],
+				end: [ 255, 255 ]
+			} );
 			self.saturation( data, -20 );
 			self.gamma( data, 1.8 );
 			self.vignette( data, width, height, "50%", 60 );

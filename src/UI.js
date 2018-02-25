@@ -56,7 +56,7 @@ UI.prototype = {
 				right: [ "load", "save" ]
 			},
 			toolbar: [ "filter", "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ],
-			filter: [ "grayscale", "vintage" ]
+			filter: [ "grayscale", "vintage", "lomo" ]
 		}, data.configs );
 
 		self._createContainer( uiData );

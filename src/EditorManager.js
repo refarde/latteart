@@ -19,7 +19,8 @@ var document = window.document,
 	],
 	_userFilterList = [
 		"grayscale",
-		"vintage"
+		"vintage",
+		"lomo"
 	],
 	_loadedConfigs = {},
 	_loadedPlugins = {},

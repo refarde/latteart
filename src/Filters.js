@@ -91,8 +91,7 @@ var Operations = require( "./utils/Operations.js" ),
 
 		curves: function( data, extra ) {
 			var algorithm, channels, bezier, start, end, ctrl1, ctrl2,
-				i, _i, _j, _ref, _ref1,
-				length = data.length;
+				i, length = data.length;
 
 			extra = extra || {};
 
@@ -103,10 +102,9 @@ var Operations = require( "./utils/Operations.js" ),
 				algorithm = Operations.bezier;
 			}
 
-			channels = extra.channels || [ "r", "g", "b" ];
-			if ( channels[ 0 ] === "v" ) {
-				channels = [ "r", "g", "b" ];
-			}
+			channels = extra.channels || { r: true, g: true, b: true };
+
+			console.log( channels );
 
 			start = extra.start;
 			ctrl1 = extra.ctrl1;
@@ -120,29 +118,29 @@ var Operations = require( "./utils/Operations.js" ),
 			bezier = algorithm( start, ctrl1, ctrl2, end, 0, 255 );
 
 			if ( start[ 0 ] > 0 ) {
-				for (
-					i = _i = 0, _ref = start[ 0 ];
-					0 <= _ref ? _i < _ref : _i > _ref;
-					i = 0 <= _ref ? ++_i : --_i
-				) {
+				for ( i = 0; i < start[ 0 ]; ++i ) {
 					bezier[ i ] = start[ 1 ];
 				}
 			}
 
 			if ( end[ 0 ] < 255 ) {
-				for (
-					i = _j = _ref1 = end[ 0 ];
-					_ref1 <= 255 ? _j <= 255 : _j >= 255;
-					i = _ref1 <= 255 ? ++_j : --_j
-				) {
+				for ( i = end[ 0 ]; i <= 255; ++i ) {
 					bezier[ i ] = end[ 1 ];
 				}
 			}
 
 			for ( i = 0; i < length; i += 4 ) {
-				data[ i ] = clampRGB( bezier[ i ] );
-				data[ i + 1 ] = clampRGB( data[ i + 1 ] );
-				data[ i + 2 ] = clampRGB( data[ i + 2 ] );
+				if ( channels.r ) {
+					data[ i ] = clampRGB( bezier[ data[ i ] ] );
+				}
+
+				if ( channels.g ) {
+					data[ i + 1 ] = clampRGB( bezier[ data[ i + 1 ] ] );
+				}
+
+				if ( channels.b ) {
+					data[ i + 2 ] = clampRGB( bezier[ data[ i + 2 ] ] );
+				}
 			}
 		},
 
@@ -157,7 +155,6 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 
 			return this.curves( data, {
-				channels: [ "r", "g", "b" ],
 				start: [ 0, 0 ],
 				ctrl1: ctrl1,
 				ctrl2: ctrl2,
@@ -352,7 +349,6 @@ var Operations = require( "./utils/Operations.js" ),
 			self.brightness( data, 15 );
 			self.exposure( data, 15 );
 			self.curves( data, {
-				channels: [ "r", "g", "b" ],
 				start: [ 0, 0 ],
 				ctrl1: [ 200, 0 ],
 				ctrl2: [ 155, 255 ],

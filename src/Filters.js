@@ -16,6 +16,9 @@ var Operations = require( "./utils/Operations.js" ),
 	},
 
 	Filters = {
+
+		// Primitive
+
 		brightness: function( data, value ) {
 			var i, length = data.length;
 
@@ -67,6 +70,51 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 		},
 
+		clip: function( data, value ) {
+			var i, length = data.length,
+				calculate = function( channel ) {
+					if ( channel > 255 - value ) {
+						channel = 255;
+					} else if ( channel < value ) {
+						channel = 0;
+					}
+
+					return clampRGB( channel );
+				};
+
+			value = mathAbs( value || 0 ) * 2.55;
+
+			for ( i = 0; i < length; i += 4 ) {
+				data[ i ] = calculate( data[ i ] );
+				data[ i + 1 ] = calculate( data[ i + 1 ] );
+				data[ i + 2 ] = calculate( data[ i + 2 ] );
+			}
+		},
+
+		colorize: function( data, rgb, level ) {
+			var i,
+				length = data.length,
+				calculate = function( channel, channelName ) {
+					var value = rgb[ channelName ];
+
+					if ( !value ) {
+						return channel;
+					}
+
+					channel -= ( channel - value ) * level;
+
+					return clampRGB( channel );
+				};
+
+			level /= 100;
+
+			for ( i = 0; i < length; i += 4 ) {
+				data[ i ] = calculate( data[ i ], "red" );
+				data[ i + 1 ] = calculate( data[ i + 1 ], "green" );
+				data[ i + 2 ] = calculate( data[ i + 2 ], "blue" );
+			}
+		},
+
 		contrast: function( data, value ) {
 			var i,
 				length = data.length,
@@ -103,8 +151,6 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 
 			channels = extra.channels || { r: true, g: true, b: true };
-
-			console.log( channels );
 
 			start = extra.start;
 			ctrl1 = extra.ctrl1;
@@ -202,6 +248,27 @@ var Operations = require( "./utils/Operations.js" ),
 				data[ i ] = clampRGB( data[ i ] + rand );
 				data[ i + 1 ] = clampRGB( data[ i + 1 ] + rand );
 				data[ i + 2 ] = clampRGB( data[ i + 2 ] + rand );
+			}
+		},
+
+		posterize: function( data, value ) {
+			var numOfAreas, numOfValues,
+				i, length = data.length,
+				calculate = function( channel ) {
+					return mathFloor( mathFloor( channel / numOfAreas ) * numOfValues );
+				};
+
+			numOfAreas = 256 / value;
+			numOfValues = 255 / ( value - 1 );
+
+			if ( isNaN( numOfAreas ) || isNaN( numOfValues ) ) {
+				return;
+			}
+
+			for ( i = 0; i < length; i += 4 ) {
+				data[ i ] = calculate( data[ i ] );
+				data[ i + 1 ] = calculate( data[ i + 1 ] );
+				data[ i + 2 ] = calculate( data[ i + 2 ] );
 			}
 		},
 
@@ -321,29 +388,34 @@ var Operations = require( "./utils/Operations.js" ),
 				}
 
 				if ( ++x >= width ) {
-					x = 0;
+					x = 0;		// Composite
 					++y;
 				}
 			}
 		},
 
-		vintage: function( data, width, height ) {
+		// Composite
+
+		clarity: function( data, width, height, isGrayscale ) {
 			var self = this;
 
-			self.grayscale( data );
-			self.contrast( data, 5 );
-			self.noise( data, 3 );
-			self.sepia( data, 100 );
-			self.channels( data, {
-				red: 8,
-				blue: 2,
-				green: 4
+			self.vibrance( data, 20 );
+			self.curves( data, {
+				start: [ 5, 0 ],
+				ctrl1: [ 130, 150 ],
+				ctrl2: [ 190, 220 ],
+				end: [ 250, 255 ]
 			} );
-			self.gamma( data, 0.87 );
-			self.vignette( data, width, height, "40%", 30 );
+			self.sharpen( data, 15 );
+			self.vignette( data, width, height, "50%", 20 );
+
+			if ( isGrayscale ) {
+				self.grayscale( data );
+				self.contrast( data, 4 );
+			}
 		},
 
-		lomo: function( data, width, height ) {
+		lomo: function( data, width, height, isVignette ) {
 			var self = this;
 
 			self.brightness( data, 15 );
@@ -356,8 +428,56 @@ var Operations = require( "./utils/Operations.js" ),
 			} );
 			self.saturation( data, -20 );
 			self.gamma( data, 1.8 );
-			self.vignette( data, width, height, "50%", 60 );
+
+			if ( isVignette === undefined || isVignette ) {
+				self.vignette( data, width, height, "50%", 60 );
+			}
+
 			self.brightness( data, 5 );
+		},
+
+		sinCity: function( data ) {
+			var self = this;
+
+			self.contrast( data, 100 );
+			self.brightness( data, 15 );
+			self.exposure( data, 10 );
+			self.posterize( data, 80 );
+			self.clip( data, 30 );
+			self.greyscale( data );
+		},
+
+		sunrise: function( data, width, height ) {
+			var self = this;
+
+			self.exposure( data, 3.5 );
+			self.saturation( data, -5 );
+			self.vibrance( data, 50 );
+			self.sepia( data, 60 );
+			self.colorize( data, { red: 232, green: 123, blue: 34 }, 10 );
+			self.channels( { red: 8, blue: 8 } );
+			self.contrast( data, 5 );
+			self.gamma( data, 1.2 );
+			self.vignette( data, width, height, "55%", 25);
+		},
+
+		vintage: function( data, width, height, isVignette ) {
+			var self = this;
+
+			self.grayscale( data );
+			self.contrast( data, 5 );
+			self.noise( data, 3 );
+			self.sepia( data, 100 );
+			self.channels( data, {
+				red: 8,
+				blue: 2,
+				green: 4
+			} );
+			self.gamma( data, 0.87 );
+
+			if ( isVignette === undefined || isVignette ) {
+				self.vignette( data, width, height, "40%", 30 );
+			}
 		}
 	};
 

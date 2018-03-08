@@ -150,7 +150,7 @@ var Operations = require( "./utils/Operations.js" ),
 				algorithm = Operations.bezier;
 			}
 
-			channels = extra.channels || { r: true, g: true, b: true };
+			channels = extra.channels || { red: true, green: true, blue: true };
 
 			start = extra.start;
 			ctrl1 = extra.ctrl1;
@@ -176,15 +176,15 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 
 			for ( i = 0; i < length; i += 4 ) {
-				if ( channels.r ) {
+				if ( channels.red ) {
 					data[ i ] = clampRGB( bezier[ data[ i ] ] );
 				}
 
-				if ( channels.g ) {
+				if ( channels.green ) {
 					data[ i + 1 ] = clampRGB( bezier[ data[ i + 1 ] ] );
 				}
 
-				if ( channels.b ) {
+				if ( channels.blue ) {
 					data[ i + 2 ] = clampRGB( bezier[ data[ i + 2 ] ] );
 				}
 			}
@@ -270,6 +270,23 @@ var Operations = require( "./utils/Operations.js" ),
 				data[ i + 1 ] = calculate( data[ i + 1 ] );
 				data[ i + 2 ] = calculate( data[ i + 2 ] );
 			}
+		},
+
+		sharpen: function( data, value ) {
+			var i, length;
+
+			if ( value === undefined ) {
+				value = 100;
+			}
+
+			value /= 100;
+
+			// TODO: data process
+			// for ( i = 0, length = data.length; i < length; i += 4 ) {
+			// 	data[ i ] = data[ i ] + value;
+			// 	data[ i + 1 ] = data[ i + 1 ] + value;
+			// 	data[ i + 2 ] = data[ i + 2 ] + value;
+			// }
 		},
 
 		saturation: function( data, value ) {
@@ -415,6 +432,70 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 		},
 
+		crossProcess: function( data ) {
+			var self = this;
+
+			self.exposure( data, 5 );
+			self.colorize( data, { red: 232, green: 123, blue: 34 }, 4 );
+			self.sepia( data, 20 );
+			self.channels( data, { red: 3, blue: 8 } );
+			self.curves( data, {
+				channels: { blue: true },
+				start: [ 0, 0 ],
+				ctrl1: [ 100, 150 ],
+				ctrl2: [ 180, 180 ],
+				end: [ 255, 255 ]
+			} );
+			self.contrast( data, 15 );
+			self.vibrance( data, 75 );
+			self.gamma( data, 1.6 );
+		},
+
+		jarques: function( data ) {
+			var self = this;
+
+			self.saturation( data, -35 );
+			self.curves( data, {
+				channels: { blue: true },
+				start: [ 20, 0 ],
+				ctrl1: [ 90, 120 ],
+				ctrl2: [ 186, 144 ],
+				end: [ 255, 230 ]
+			} );
+			self.curves( data, {
+				channels: { red: true },
+				start: [ 0, 0 ],
+				ctrl1: [ 144, 90 ],
+				ctrl2: [ 138, 120 ],
+				end: [ 255, 255 ]
+			} );
+			self.curves( data, {
+				channels: { green: true },
+				start: [ 10, 0 ],
+				ctrl1: [ 115, 105 ],
+				ctrl2: [ 148, 100 ],
+				end: [ 255, 248 ]
+			} );
+			self.curves( data, {
+				start: [ 0, 0 ],
+				ctrl1: [ 120, 100 ],
+				ctrl2: [ 128, 140 ],
+				end: [ 255, 255 ]
+			} );
+			self.sharpen( data, 20 );
+		},
+
+		grungy: function( data, width, height ) {
+			var self = this;
+
+			self.gamma( data, 1.5 );
+			self.clip( data, 25 );
+			self.saturation( data, -60 );
+			self.contrast( data, 5 );
+			self.noise( data, 5 );
+			self.vignette( data, width, height, "50%", 30 );
+		},
+
 		lomo: function( data, width, height, isVignette ) {
 			var self = this;
 
@@ -436,6 +517,33 @@ var Operations = require( "./utils/Operations.js" ),
 			self.brightness( data, 5 );
 		},
 
+		love: function( data ) {
+			var self = this;
+
+			self.brightness( data, 5 );
+			self.exposure( data, 8 );
+			self.contrast( data, 4 );
+			self.colorize( data, { red: 196, green: 32, blue: 7 }, 30 );
+			self.vibrance( data, 50 );
+			self.gamma( data, 1.3 );
+		},
+
+		orangePeel: function( data ) {
+			var self = this;
+
+			self.curves( data, {
+				start: [ 0, 0 ],
+				ctrl1: [ 100, 50 ],
+				ctrl2: [ 140, 200 ],
+				end: [ 255, 255 ]
+			} );
+			self.vibrance( data, -30 );
+			self.saturation( data, -30 );
+			self.colorize( data, { red: 255, green: 144, blue: 0 }, 30 );
+			self.contrast( data, -5 );
+			self.gamma( data, 1.4 );
+		},
+
 		sinCity: function( data ) {
 			var self = this;
 
@@ -455,7 +563,7 @@ var Operations = require( "./utils/Operations.js" ),
 			self.vibrance( data, 50 );
 			self.sepia( data, 60 );
 			self.colorize( data, { red: 232, green: 123, blue: 34 }, 10 );
-			self.channels( { red: 8, blue: 8 } );
+			self.channels( data, { red: 8, blue: 8 } );
 			self.contrast( data, 5 );
 			self.gamma( data, 1.2 );
 			self.vignette( data, width, height, "55%", 25);

@@ -5,6 +5,7 @@ var Operations = require( "./utils/Operations.js" ),
 	mathPow = Math.pow,
 	mathSqrt = Math.sqrt,
 	mathAbs = Math.abs,
+	mathFloor = Math.floor,
 	clampRGB = function( channel ) {
 		if ( channel < 0 ) {
 			return 0;
@@ -22,7 +23,7 @@ var Operations = require( "./utils/Operations.js" ),
 		brightness: function( data, value ) {
 			var i, length = data.length;
 
-			value = Math.floor( 255 * ( ( value || 0 ) / 100 ) );
+			value = mathFloor( 255 * ( ( value || 0 ) / 100 ) );
 
 			for ( i = 0; i < length; i += 4 ) {
 				data[ i ] = clampRGB( data[ i ] + value );
@@ -134,6 +135,51 @@ var Operations = require( "./utils/Operations.js" ),
 				data[ i ] = calculate( data[ i ], value );
 				data[ i + 1 ] = calculate( data[ i + 1 ], value );
 				data[ i + 2 ] = calculate( data[ i + 2 ], value );
+			}
+		},
+
+		convolute: function( data, width, height, weights, opaque ) {
+			var side = mathRound( mathSqrt( weights.length ) ),
+				halfSide = mathFloor( side / 2 ),
+				src = data.slice(),
+				alphaFac = opaque ? 1 : 0,
+				sx, sy, cx, cy, scx, scy,
+				dstOff, srcOff, wt,
+				r, g, b, a;
+
+			for ( sy = 0; sy < height; sy++ ) {
+				for ( sx = 0; sx < width; sx++ ) {
+					dstOff = ( sy * width + sx ) * 4;
+					r = g = b = a = 0;
+
+					for ( cy = 0; cy < side; cy++ ) {
+						for ( cx = 0; cx < side; cx++ ) {
+							scy = sy + cy - halfSide;
+							scx = sx + cx - halfSide;
+
+							if ( scy >= 0 && scy < height && scx >= 0 && scx < width ) {
+								srcOff = ( scy * width + scx ) * 4;
+								wt = weights[ cy * side + cx ];
+
+								r += src[ srcOff ] * wt;
+								g += src[ srcOff + 1 ] * wt;
+								b += src[ srcOff + 2 ] * wt;
+
+								if ( alphaFac ) {
+									a += src[ srcOff + 3 ] * wt;
+								}
+							}
+						}
+					}
+
+					data[ dstOff ] = r;
+					data[ dstOff + 1 ] = g;
+					data[ dstOff + 2 ] = b;
+
+					if ( alphaFac ) {
+						data[ dstOff + 3 ] = a + alphaFac * ( 255 - a );
+					}
+				}
 			}
 		},
 
@@ -272,21 +318,19 @@ var Operations = require( "./utils/Operations.js" ),
 			}
 		},
 
-		sharpen: function( data, value ) {
-			var i, length;
-
+		sharpen: function( data, width, height, value ) {
 			if ( value === undefined ) {
 				value = 100;
 			}
 
 			value /= 100;
 
-			// TODO: data process
-			// for ( i = 0, length = data.length; i < length; i += 4 ) {
-			// 	data[ i ] = data[ i ] + value;
-			// 	data[ i + 1 ] = data[ i + 1 ] + value;
-			// 	data[ i + 2 ] = data[ i + 2 ] + value;
-			// }
+			this.convolute(
+				data,
+				width,
+				height,
+				[ 0, -value, 0, -value, 4 * value + 1, -value, 0, -value, 0 ]
+			);
 		},
 
 		saturation: function( data, value ) {
@@ -423,7 +467,7 @@ var Operations = require( "./utils/Operations.js" ),
 				ctrl2: [ 190, 220 ],
 				end: [ 250, 255 ]
 			} );
-			self.sharpen( data, 15 );
+			self.sharpen( data, width, height, 15 );
 			self.vignette( data, width, height, "50%", 20 );
 
 			if ( isGrayscale ) {
@@ -451,7 +495,7 @@ var Operations = require( "./utils/Operations.js" ),
 			self.gamma( data, 1.6 );
 		},
 
-		jarques: function( data ) {
+		jarques: function( data, width, height ) {
 			var self = this;
 
 			self.saturation( data, -35 );
@@ -482,7 +526,7 @@ var Operations = require( "./utils/Operations.js" ),
 				ctrl2: [ 128, 140 ],
 				end: [ 255, 255 ]
 			} );
-			self.sharpen( data, 20 );
+			self.sharpen( data, width, height, 20 );
 		},
 
 		grungy: function( data, width, height ) {
@@ -566,7 +610,7 @@ var Operations = require( "./utils/Operations.js" ),
 			self.channels( data, { red: 8, blue: 8 } );
 			self.contrast( data, 5 );
 			self.gamma( data, 1.2 );
-			self.vignette( data, width, height, "55%", 25);
+			self.vignette( data, width, height, "55%", 25 );
 		},
 
 		vintage: function( data, width, height, isVignette ) {

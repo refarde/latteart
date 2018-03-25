@@ -596,7 +596,7 @@ var Operations = require( "./utils/Operations.js" ),
 			self.exposure( data, 10 );
 			self.posterize( data, 80 );
 			self.clip( data, 30 );
-			self.greyscale( data );
+			self.grayscale( data );
 		},
 
 		sunrise: function( data, width, height ) {

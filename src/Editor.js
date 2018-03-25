@@ -55,7 +55,8 @@ Editor.prototype = {
 			menuItems: self.menuItems,
 			buttons: self.buttons,
 			panels: self.panels,
-			dialogs: self.dialogs
+			dialogs: self.dialogs,
+			loadFilters: self.userFilters
 		} );
 	},
 

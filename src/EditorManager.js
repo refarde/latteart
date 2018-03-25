@@ -20,11 +20,26 @@ var document = window.document,
 	_userFilterList = [
 		"grayscale",
 		"vintage",
-		"lomo"
+		"lomo",
+		"clarity",
+		"sinCity",
+		"sunrise",
+		"crossProcess",
+		"orangePeel",
+		"love",
+		"grungy",
+		"jarques",
+		"pinhole",
+		"oldBoot",
+		"glowingSun",
+		"hazyDays",
+		"herMajesty",
+		"nostalgia",
+		"hemingway",
+		"concentrate"
 	],
 	_loadedConfigs = {},
 	_loadedPlugins = {},
-	_loadedUserFilters = {},
 
 	EditorManager = {
 		$: $,
@@ -79,20 +94,6 @@ var document = window.document,
 				}
 			}
 
-			function loadUserFilters() {
-				var i, listLength, filterName;
-
-				listLength = _userFilterList.length;
-
-				for ( i = 0; i < listLength; i++ ) {
-					filterName = _userFilterList[ i ];
-
-					if ( !_loadedUserFilters[ filterName ] ) {
-						_loadedUserFilters[ filterName ] = require( "./filters/" + filterName + ".js"  );
-					}
-				}
-			}
-
 			function loadConfigs( url, type ) {
 				var configs = {};
 
@@ -142,7 +143,6 @@ var document = window.document,
 					loadConfigs( configs, type );
 
 			loadPlugins();
-			loadUserFilters();
 
 			require( "./skins/default.less" );
 
@@ -153,7 +153,7 @@ var document = window.document,
 				editor.create( {
 					configs: configs,
 					plugins: _loadedPlugins,
-					userFilters: _loadedUserFilters
+					userFilters: _userFilterList
 				} );
 
 				if ( typeof callback === "function" ) {

@@ -31,7 +31,8 @@ UI.prototype = {
 		}
 
 		uiData = self._init( {
-			configs: data.configs
+			configs: data.configs,
+			loadFilters: data.loadFilters
 		} );
 
 		self.widgets = uiData.widgets;
@@ -56,7 +57,7 @@ UI.prototype = {
 				right: [ "load", "save" ]
 			},
 			toolbar: [ "filter", "rotation", "flip", "crop", "brightness", "contrast", "saturation", "text", "brush" ],
-			filter: [ "grayscale", "vintage", "lomo" ]
+			filter: data.loadFilters
 		}, data.configs );
 
 		self._createContainer( uiData );

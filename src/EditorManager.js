@@ -15,7 +15,8 @@ var document = window.document,
 		"flip",
 		"brightness",
 		"contrast",
-		"saturation"
+		"saturation",
+		"zoom"
 	],
 	_userFilterList = [
 		"grayscale",
